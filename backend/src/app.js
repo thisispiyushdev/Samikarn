@@ -71,14 +71,21 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 
 // Serve Frontend Static Files
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+if (!process.env.VERCEL) {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const frontendDistPath = path.join(__dirname, '../../frontend/dist');
 
-app.use(express.static(frontendDistPath));
+  app.use(express.static(frontendDistPath));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendDistPath, 'index.html'));
-});
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+} else {
+  // On Vercel, return 404 for unmatched routes instead of throwing an error by looking for local files
+  app.use((req, res) => {
+    res.status(404).json({ success: false, message: 'API route not found on backend service' });
+  });
+}
 
 export default app;

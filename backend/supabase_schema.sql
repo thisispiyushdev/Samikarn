@@ -3,7 +3,7 @@
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE public.admins (
+CREATE TABLE IF NOT EXISTS public.admins (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE public.admins (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE public.projects (
+CREATE TABLE IF NOT EXISTS public.projects (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE public.projects (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE public.media (
+CREATE TABLE IF NOT EXISTS public.media (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   url TEXT NOT NULL,
@@ -34,14 +34,14 @@ CREATE TABLE public.media (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE public.subscribers (
+CREATE TABLE IF NOT EXISTS public.subscribers (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   status TEXT DEFAULT 'Active',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE public.contacts (
+CREATE TABLE IF NOT EXISTS public.contacts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE public.contacts (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE public.settings (
+CREATE TABLE IF NOT EXISTS public.settings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   address TEXT,
   phone TEXT,
@@ -74,7 +74,7 @@ ALTER TABLE public.subscribers DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contacts DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.settings DISABLE ROW LEVEL SECURITY;
 
-CREATE TABLE public.donations (
+CREATE TABLE IF NOT EXISTS public.donations (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   razorpay_order_id TEXT UNIQUE NOT NULL,
   razorpay_payment_id TEXT,
