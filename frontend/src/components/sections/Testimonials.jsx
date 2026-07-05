@@ -47,7 +47,7 @@ const Testimonials = () => {
   }
 
   if (testimonials.length === 0) {
-     return null; // Don't show the section if no active testimonials
+     return null; // Don`t show the section if no active testimonials
   }
 
   // Split testimonials into 3 arrays for the 3 columns

@@ -14,7 +14,7 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media');
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`);
         const data = await res.json();
         if (data.success && data.media.length > 0) {
           setHeroImages(data.media.map(m => m.mainImage || m.url));

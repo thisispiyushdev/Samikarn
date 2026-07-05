@@ -12,9 +12,9 @@ const Projects = () => {
     const fetchData = async () => {
       try {
         const [p, r, a] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects').then(res => res.json()),
-          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/reports').then(res => res.json()),
-          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements').then(res => res.json())
+          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects`).then(res => res.json()),
+          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/reports`).then(res => res.json()),
+          fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(res => res.json())
         ]);
         
         if (p.success) setProjects(p.projects);
