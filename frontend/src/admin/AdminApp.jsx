@@ -1250,8 +1250,8 @@ const Reports = ({ showToast }) => {
                   <textarea value={form.description} onChange={e=>setForm({...form,description:e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 h-24 focus:bg-white outline-none" required />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Full HTML Content (Detailed View)</label>
-                  <textarea value={form.fullContent} onChange={e=>setForm({...form,fullContent:e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 h-48 focus:bg-white outline-none font-mono text-[10px]" placeholder="<p>Detailed content here...</p>" />
+                  <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Detailed Content (Full View)</label>
+                  <textarea value={form.fullContent} onChange={e=>setForm({...form,fullContent:e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 h-48 focus:bg-white outline-none text-sm" placeholder="Write the detailed content here..." />
                 </div>
                 <div className="space-y-4 border-t border-gray-100 pt-6">
                   <div className="flex justify-between items-center">
