@@ -1,3 +1,4 @@
+import { cacheMiddleware, clearCache } from '../middleware/cacheMiddleware.js';
 import express from 'express';
 import { 
   listTestimonials, 
@@ -9,9 +10,9 @@ import { verifyAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', listTestimonials);
-router.post('/', verifyAdmin, createTestimonial);
-router.put('/:id', verifyAdmin, updateTestimonial);
-router.delete('/:id', verifyAdmin, deleteTestimonial);
+router.get('/', cacheMiddleware(300), listTestimonials);
+router.post('/', clearCache('/api/testimonials'), verifyAdmin, createTestimonial);
+router.put('/:id', clearCache('/api/testimonials'), verifyAdmin, updateTestimonial);
+router.delete('/:id', clearCache('/api/testimonials'), verifyAdmin, deleteTestimonial);
 
 export default router;
