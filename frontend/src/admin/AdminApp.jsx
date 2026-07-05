@@ -818,7 +818,7 @@ const Dashboard = ({ showToast }) => {
 
 const Projects = ({ showToast }) => {
   const [items, setItems] = useState([]);
-  const [form, setForm] = useState({ title:'', description:'', image:'', status:'Active' });
+  const [form, setForm] = useState({ title:'', description:'', image:'', status:'Active', gallery: [] });
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [search, setSearch] = useState('');
@@ -857,7 +857,7 @@ const Projects = ({ showToast }) => {
       const data = await res.json();
       if (data.success) { 
         showToast(editingId ? 'Mission updated successfully' : 'New mission deployed');
-        setForm({ title:'', description:'', image:'', status:'Active' }); 
+        setForm({ title:'', description:'', image:'', status:'Active', gallery: [] }); 
         setEditingId(null);
         load(); 
       } else {
@@ -876,7 +876,8 @@ const Projects = ({ showToast }) => {
       title: p.title,
       description: p.description,
       image: p.image || '',
-      status: p.status || 'Active'
+      status: p.status || 'Active',
+      gallery: p.gallery || []
     });
     setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -884,7 +885,7 @@ const Projects = ({ showToast }) => {
 
   const cancelEdit = () => {
     setEditingId(null);
-    setForm({ title:'', description:'', image:'', status:'Active' });
+    setForm({ title:'', description:'', image:'', status:'Active', gallery: [] });
     setIsFormOpen(false);
   };
 
@@ -967,7 +968,7 @@ const Projects = ({ showToast }) => {
                 <div className="grid md:grid-cols-2 gap-8">
                   <PremiumInput label="Mission Designation" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Project Title" required />
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Upload Visual Asset</label>
+                    <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Upload Cover Asset</label>
                     <input 
                         type="file" 
                         accept="image/*"
@@ -983,6 +984,53 @@ const Projects = ({ showToast }) => {
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                     />
                     {form.image && <img src={form.image} alt="Preview" className="h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200" />}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Upload Gallery Assets (Multiple)</label>
+                    <input 
+                        type="file" 
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => {
+                            const files = Array.from(e.target.files);
+                            if (form.gallery.length + files.length > 5) return showToast('Max 5 images allowed', 'error');
+                            
+                            const newGallery = [...form.gallery];
+                            files.forEach(file => {
+                                if (file.size > 61440) {
+                                    showToast(`${file.name} exceeds 60KB`, 'error');
+                                    return;
+                                }
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    setForm(prev => ({...prev, gallery: [...prev.gallery, reader.result]}));
+                                };
+                                reader.readAsDataURL(file);
+                            });
+                        }}
+                        className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                    />
+                    {form.gallery && form.gallery.length > 0 && (
+                        <div className="flex gap-2 mt-2 overflow-x-auto pb-2">
+                            {form.gallery.map((img, idx) => (
+                                <div key={idx} className="relative group shrink-0">
+                                    <img src={img} alt={`Gallery ${idx}`} className="h-20 w-32 object-cover rounded-xl border border-gray-200" />
+                                    <button 
+                                        type="button"
+                                        onClick={() => {
+                                            const ng = [...form.gallery];
+                                            ng.splice(idx, 1);
+                                            setForm({...form, gallery: ng});
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
@@ -1853,7 +1901,15 @@ const CarouselManager = ({ showToast }) => {
       <FormModal isOpen={isFormOpen} title={editingId ? "Edit Image" : "Add Image"} onClose={cancelEdit}>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <PremiumInput label="Image Title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="e.g., Workshop 2024" required />
-                
+                <PremiumInput label="Category" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} placeholder="e.g., general, event" />
+                <PremiumInput label="Description" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Short description for the image" />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 block mb-1">Media Type</label>
+                  <select value={form.type} onChange={e=>setForm({...form,type:e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800">
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                  </select>
+                </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700 block mb-1">Upload Image</label>
                   <input 
@@ -2128,12 +2184,188 @@ const TestimonialsAdmin = ({ showToast }) => {
   );
 };
 
+const CausesAdmin = ({ showToast }) => {
+  const [items, setItems] = useState([]);
+  const [form, setForm] = useState({ title:'', description:'', amount: 0, is_active: true });
+  const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const token = localStorage.getItem('admin_token') || '';
+
+  const load = async () => {
+    try {
+      const res = await fetch(`${apiBase}/api/causes`);
+      const data = await res.json();
+      if (data.success) setItems(data.causes);
+    } catch (err) {
+      showToast('Failed to load causes', 'error');
+    }
+  };
+  useEffect(()=>{ load(); },[]);
+
+  const filteredItems = items.filter(c => 
+    c.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const url = editingId ? `${apiBase}/api/causes/${editingId}` : `${apiBase}/api/causes`;
+      const method = editingId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(form)
+      });
+      const data = await res.json();
+      if (data.success) { 
+        showToast(editingId ? 'Cause updated' : 'Cause added successfully');
+        setForm({ title:'', description:'', amount: 0, is_active: true }); 
+        setEditingId(null);
+        load(); 
+        setIsFormOpen(false);
+      } else {
+        showToast(data.message || 'Operation failed', 'error');
+      }
+    } catch (err) {
+      showToast('Connection error', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startEdit = (c) => {
+    setEditingId(c.id);
+    setForm({
+      title: c.title,
+      description: c.description,
+      amount: c.amount,
+      is_active: c.is_active
+    });
+    setIsFormOpen(true);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm({ title:'', description:'', amount: 0, is_active: true });
+    setIsFormOpen(false);
+  };
+
+  const remove = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/causes/${confirmDelete.id}`, { 
+        method:'DELETE', 
+        headers:{ Authorization: `Bearer ${token}` } 
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Cause removed');
+        setConfirmDelete({ open: false, id: null });
+        load();
+      }
+    } catch (err) {
+      showToast('Failed to remove entry', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <ConfirmModal 
+        isOpen={confirmDelete.open} 
+        title="Remove Cause?" 
+        message="This will remove the cause permanently." 
+        onConfirm={remove} 
+        onCancel={() => setConfirmDelete({ open: false, id: null })} 
+        loading={loading}
+      />
+
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="relative group flex-1 w-full md:max-w-md">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input 
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search Causes..." 
+            className="pl-12 pr-6 py-3 rounded-xl bg-white border border-gray-200 shadow-sm outline-none transition-all w-full font-medium text-gray-900" 
+          />
+        </div>
+        <ShinyButton 
+          onClick={() => setIsFormOpen(!isFormOpen)} 
+          variant={isFormOpen ? "danger" : "primary"}
+          className="rounded-xl px-6 py-3"
+        >
+          {isFormOpen ? "Cancel" : "Add New Cause"}
+        </ShinyButton>
+      </div>
+
+      <FormModal isOpen={isFormOpen} title={editingId ? "Edit Cause" : "Add Cause"} onClose={cancelEdit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <PremiumInput label="Cause Title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="e.g., Sponsor a Child Education" required />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block mb-1">Description</label>
+              <textarea value={form.description} onChange={e=>setForm({...form,description:e.target.value})} required placeholder="Provide books, uniform, and tuition..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800 min-h-[100px]"></textarea>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block mb-1">Amount (₹)</label>
+              <input type="number" value={form.amount} onChange={e=>setForm({...form,amount:Number(e.target.value)})} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800" />
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input type="checkbox" id="causeActive" checked={form.is_active} onChange={e=>setForm({...form, is_active: e.target.checked})} className="w-4 h-4 rounded border-gray-300" />
+              <label htmlFor="causeActive" className="text-sm font-medium text-gray-700">Active (Visible on website)</label>
+            </div>
+            <div className="flex gap-4">
+              <ShinyButton className="flex-1" loading={loading}>
+                {editingId ? "Update Cause" : "Save Cause"}
+              </ShinyButton>
+            </div>
+        </form>
+      </FormModal>
+
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <AnimatePresence>
+          {filteredItems.map((c)=>(
+            <motion.div 
+              key={c.id}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col p-6"
+            >
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{c.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3 mb-4">{c.description}</p>
+              <p className="text-sm font-black text-emerald-600 mb-4">₹{c.amount}</p>
+              
+              <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                <span className={`text-xs font-bold px-2 py-1 rounded-full ${c.is_active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
+                  {c.is_active ? 'Active' : 'Hidden'}
+                </span>
+                <div className="flex gap-2">
+                  <button onClick={() => startEdit(c)} className="p-2 rounded-lg bg-gray-50 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"><Edit3 size={16} /></button>
+                  <button onClick={()=>setConfirmDelete({ open: true, id: c.id })} className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"><Trash2 size={16} /></button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
 const SiteContentManager = ({ showToast }) => {
   const [activeTab, setActiveTab] = useState('carousel');
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-gray-200 pb-2">
+      <div className="flex flex-wrap gap-4 border-b border-gray-200 pb-2">
         <button 
           onClick={() => setActiveTab('carousel')} 
           className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'carousel' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
@@ -2146,13 +2378,17 @@ const SiteContentManager = ({ showToast }) => {
         >
           Testimonials
         </button>
+        <button 
+          onClick={() => setActiveTab('causes')} 
+          className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'causes' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
+        >
+          Donation Causes
+        </button>
       </div>
       
-      {activeTab === 'carousel' ? (
-        <CarouselManager showToast={showToast} />
-      ) : (
-        <TestimonialsAdmin showToast={showToast} />
-      )}
+      {activeTab === 'carousel' && <CarouselManager showToast={showToast} />}
+      {activeTab === 'testimonials' && <TestimonialsAdmin showToast={showToast} />}
+      {activeTab === 'causes' && <CausesAdmin showToast={showToast} />}
     </div>
   );
 };

@@ -83,18 +83,17 @@ const HeroSection = () => {
         
         {/* Welcome Badge */}
         <div className="hero-element inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-primary font-bold mb-8 border border-primary/20 text-sm tracking-widest uppercase mt-8">
-          Welcome to SAMIKARAN
+          Empowering Communities
         </div>
         
         {/* Original Typography */}
-        <h1 className="hero-element text-6xl md:text-8xl font-black leading-tight mb-8 text-white drop-shadow-2xl tracking-tighter">
-          Finding Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400 drop-shadow-md">Voice</span>, <br />
-          Finding Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-primary drop-shadow-md">Way</span>
+        <h1 className="hero-element text-6xl md:text-7xl font-black leading-tight mb-8 text-white drop-shadow-2xl tracking-tighter">
+          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400 drop-shadow-md">Samikaran</span>
         </h1>
 
         {/* Subtext */}
-        <p className="hero-element text-xl md:text-2xl text-white/90 mb-12 max-w-3xl leading-relaxed font-medium bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/20 shadow-xl">
-          We build communication and professional skills to strengthen confidence in underserved communities, enabling individuals to lead lives of purpose.
+        <p className="hero-element text-xl md:text-2xl text-white/90 mb-12 max-w-3xl leading-relaxed font-medium">
+          Building an able society where every individual leads a life of purpose
         </p>
         
         {/* Pill Buttons */}

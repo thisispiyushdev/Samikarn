@@ -121,43 +121,28 @@ const Media = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.5, delay: idx * 0.05 }}
-                  className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden"
+                  className="flex flex-col gap-4 group cursor-pointer"
+                  onClick={() => { if(item.link) window.open(item.link, '_blank'); }}
                 >
-                  <div className="h-64 relative overflow-hidden">
+                  <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
                     <img 
                       src={item.mainImage} 
                       alt={item.title} 
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] shadow-xl">
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-gray-900 uppercase shadow-sm">
                       {item.type}
                     </div>
                   </div>
 
-                  <div className="p-10">
-                    <div className="flex items-center gap-2 mb-4 text-primary">
-                      <Calendar size={14} />
-                      <span className="text-[10px] font-black uppercase tracking-widest">{new Date(item.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors">{item.title}</h4>
+                      <p className="text-gray-500 mt-1 line-clamp-2">{item.description}</p>
                     </div>
-                    <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight leading-tight uppercase group-hover:text-primary transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-400 font-medium text-sm line-clamp-3 mb-8 leading-relaxed">
-                      {item.description}
-                    </p>
-                    
-                    <div className="pt-8 border-t border-gray-50 flex items-center justify-between">
-                      <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Media Release</span>
-                      {item.link && (
-                        <a 
-                          href={item.link} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="flex items-center gap-2 text-primary font-black text-xs tracking-widest hover:translate-x-1 transition-transform"
-                        >
-                          READ FULL <ExternalLink size={16} />
-                        </a>
-                      )}
+                    <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
+                      {new Date(item.date).getFullYear()}
                     </div>
                   </div>
                 </motion.div>
