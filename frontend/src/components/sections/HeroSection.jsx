@@ -81,8 +81,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 z-20 flex flex-col items-center text-center w-full max-w-5xl">
         
         
-        {/* Original Typography */}
-        <h1 className="hero-element text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter">
+        <h1 className="hero-element text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter whitespace-nowrap">
           Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400 drop-shadow-md">Samikaran</span>
         </h1>
 
