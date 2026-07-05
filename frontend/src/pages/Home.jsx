@@ -90,13 +90,12 @@ const Home = () => {
                   </div>
               </div>
               <div>
-                  <h2 className="text-sm font-bold tracking-wide text-secondary uppercase mb-2">About Us</h2>
-                  <h3 className="text-4xl font-bold text-gray-900 mb-6">Bridging Opportunity Gaps</h3>
+                  <h2 className="text-2xl font-bold tracking-wide text-secondary uppercase mb-2">About Us</h2>
                   <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                      Samikaran was founded to enable individuals to lead lives of purpose — not as a privilege, but as a right.
+                      Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth, especially from underserved communities.
                   </p>
                   <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                      We build communication and professional skills to strengthen confidence in underserved communities. At Samikaran, we believe that when people find their voice, they find their way.
+                      Our focus is simple to build an able society where every individual leads a life of purpose.
                   </p>
                   <Link to="/about" className="text-primary font-bold hover:brightness-90 inline-flex items-center gap-2 text-lg group">
                       Read Our Full Story <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

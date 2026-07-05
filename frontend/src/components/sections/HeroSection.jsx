@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
+import { Heart } from 'lucide-react';
 
 const HeroSection = () => {
   const [currentHeroIdx, setCurrentHeroIdx] = useState(0);
   
-  const [heroImages, setHeroImages] = useState([
-    "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1920&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1920&auto=format&fit=crop"
-  ]);
+  const hardcodedImage = "https://i.ibb.co/KHtZ7g2/image-2026-07-05-170637002.png";
+  const [heroImages, setHeroImages] = useState([hardcodedImage]);
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -17,7 +16,7 @@ const HeroSection = () => {
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`);
         const data = await res.json();
         if (data.success && data.media.length > 0) {
-          setHeroImages(data.media.map(m => m.mainImage || m.url));
+          setHeroImages([hardcodedImage, ...data.media.map(m => m.mainImage || m.url)]);
         }
       } catch (err) {
         console.error("Failed to fetch carousel images:", err);
@@ -81,10 +80,6 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 z-20 flex flex-col items-center text-center w-full max-w-5xl">
         
-        {/* Welcome Badge */}
-        <div className="hero-element inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-primary font-bold mb-8 border border-primary/20 text-sm tracking-widest uppercase mt-8">
-          Empowering Communities
-        </div>
         
         {/* Original Typography */}
         <h1 className="hero-element text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter">
@@ -100,9 +95,10 @@ const HeroSection = () => {
         <div className="hero-element flex gap-4 md:gap-6 flex-wrap justify-center">
           <Link 
             to="/donate" 
-            className="bg-primary text-white px-10 py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:scale-105 hover:bg-primary/90 transition-all shadow-lg"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary text-white px-10 py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:scale-105 transition-all shadow-lg hover:shadow-xl"
           >
-            Donate
+            <Heart size={18} fill="currentColor" className="animate-pulse" />
+            <span>Donate</span>
           </Link>
           <Link 
             to="/about" 

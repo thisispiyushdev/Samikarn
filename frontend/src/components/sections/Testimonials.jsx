@@ -63,7 +63,7 @@ const Testimonials = () => {
         <h2 className="text-primary font-black uppercase tracking-[0.2em] text-xs mb-4">Loved by our community</h2>
         <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">See why they trust us</h3>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Read the stories of transformation and growth from the students, parents, and partners we work with every day.
+          Read the stories of transformation and growth from the individuals we have worked with.
         </p>
       </div>
 

@@ -2302,6 +2302,29 @@ const TestimonialsAdmin = ({ showToast }) => {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700 block mb-1">Avatar Image (Optional)</label>
+                  <div className="flex gap-2 mb-2">
+                    <button 
+                      type="button"
+                      onClick={() => setForm({...form, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'})}
+                      className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium border border-blue-100 hover:bg-blue-100"
+                    >
+                      👦 Male Avatar
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setForm({...form, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia'})}
+                      className="px-3 py-1 bg-pink-50 text-pink-600 rounded-lg text-xs font-medium border border-pink-100 hover:bg-pink-100"
+                    >
+                      👩 Female Avatar
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setForm({...form, avatar: ''})}
+                      className="px-3 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-medium border border-gray-100 hover:bg-gray-100"
+                    >
+                      Clear
+                    </button>
+                  </div>
                   <input 
                       type="file" 
                       accept="image/*"
