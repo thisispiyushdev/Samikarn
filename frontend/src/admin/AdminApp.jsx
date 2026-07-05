@@ -45,7 +45,7 @@ import {
 import { convertDriveLinkToDirect } from '../utils/googleDriveParser';
 import logo from '../assets/media/1.png.png';
 
-const apiBase = '';
+const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
