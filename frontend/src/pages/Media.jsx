@@ -28,16 +28,20 @@ const Media = () => {
     }).catch(err => console.error("Failed to fetch media/announcements:", err));
   }, []);
 
+  const uniqueCategories = ['All', 'News', 'Event', 'Award', 'Press Release'];
+
   const filteredMedia = mediaItems.filter(item => {
-    const matchesFilter = filter === 'All' || item.type === filter;
-    const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
+    const matchesFilter = filter === 'All' || (item.type && item.type.toLowerCase() === filter.toLowerCase());
+    const matchesSearch = item.title?.toLowerCase().includes(search.toLowerCase()) || 
                           (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
     return matchesFilter && matchesSearch;
   });
 
   const filteredAnnouncements = announcements.filter(item => {
-    return item.title.toLowerCase().includes(search.toLowerCase()) || 
-           (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
+    const matchesFilter = filter === 'All' || (item.type && item.type.toLowerCase() === filter.toLowerCase());
+    const matchesSearch = item.title?.toLowerCase().includes(search.toLowerCase()) || 
+                          (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
+    return matchesFilter && matchesSearch;
   });
 
   return (
@@ -102,7 +106,7 @@ const Media = () => {
       <section className="py-12 border-b border-gray-100 bg-white sticky top-0 z-30 shadow-sm">
         <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8 items-center justify-between">
           <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto custom-scrollbar">
-            {['All', 'News', 'Event', 'Headline', 'Award'].map(t => (
+            {uniqueCategories.map(t => (
               <button 
                 key={t}
                 onClick={() => setFilter(t)}
@@ -138,7 +142,7 @@ const Media = () => {
               <AnimatePresence mode="popLayout">
                 {filteredAnnouncements.map((item, idx) => (
                   <motion.div 
-                    key={item._id || item.id}
+                    key={item._id || item.id || idx}
                     layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -194,15 +198,11 @@ const Media = () => {
       {/* Media Grid */}
       <section className="py-24">
         <div className="container mx-auto px-4">
-          <div className="mb-12">
-            <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">In the News</h2>
-            <h3 className="text-4xl font-bold text-gray-900">Media Coverage</h3>
-          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             <AnimatePresence mode="popLayout">
               {filteredMedia.map((item, idx) => (
                 <motion.div 
-                  key={item._id || item.id}
+                  key={item._id || item.id || idx}
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

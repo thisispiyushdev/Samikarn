@@ -190,7 +190,7 @@ const Impact = () => {
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="mb-16">
               <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Live Updates</h2>
-              <h3 className="text-4xl font-bold text-gray-900">Active Missions</h3>
+              <h3 className="text-4xl font-bold text-gray-900">Active Projects</h3>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -337,6 +337,16 @@ const Impact = () => {
                           </div>
                         )}
                         
+                        {(selectedItem.pdfLink || selectedItem.pdfUrl || selectedItem.fileUrl || selectedItem.pdf) && (
+                            <a 
+                                href={selectedItem.pdfLink || selectedItem.pdfUrl || selectedItem.fileUrl || selectedItem.pdf} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="w-full bg-secondary text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg hover:bg-secondary/90 transition-all flex items-center justify-center gap-2 mb-6"
+                            >
+                                <FileText size={18} fill="currentColor" /> Download PDF
+                            </a>
+                        )}
                         <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-8 border border-primary/20 text-center shadow-sm">
                             <p className="text-gray-900 font-bold mb-4">Inspired by this?</p>
                             <Link 

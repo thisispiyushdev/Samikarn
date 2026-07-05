@@ -40,7 +40,8 @@ import {
   Edit3,
   FileText,
   Megaphone,
-  LayoutTemplate
+  LayoutTemplate,
+  MessageSquare
 } from 'lucide-react';
 import { convertDriveLinkToDirect } from '../utils/googleDriveParser';
 import logo from '../assets/media/1.png.png';
@@ -150,6 +151,49 @@ const PremiumInput = ({ label, icon: Icon, type = 'text', ...props }) => {
           )}
           {...props}
         />
+      </div>
+    </div>
+  );
+};
+
+const PremiumSelect = ({ label, icon: Icon, options = [], ...props }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  return (
+    <div className="space-y-2 w-full">
+      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest transition-colors duration-200">
+        {label}
+      </label>
+      <div
+        className={cn(
+          "relative flex items-center rounded-xl bg-gray-50/50 border transition-all duration-200",
+          isFocused 
+            ? "border-indigo-500 bg-white shadow-[0_0_0_4px_rgba(99,102,241,0.1)]" 
+            : "border-gray-200 hover:border-gray-300"
+        )}
+      >
+        {Icon && (
+          <div className="pl-4 flex items-center justify-center text-gray-400">
+            <Icon size={18} className={cn("transition-colors duration-200", isFocused && "text-indigo-500")} />
+          </div>
+        )}
+        <select
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className={cn(
+            "w-full bg-transparent px-4 py-3.5 text-sm font-semibold text-gray-900 outline-none placeholder:text-gray-400 appearance-none",
+            Icon && "pl-3"
+          )}
+          {...props}
+        >
+          <option value="" disabled>Select category...</option>
+          {options.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
       </div>
     </div>
   );
@@ -499,6 +543,7 @@ const AdminLayout = ({ onLogout, showToast }) => {
     { path: '/admin/projects', name: 'Projects', icon: FolderHeart },
     { path: '/admin/reports', name: 'Reporting', icon: FileText },
     { path: '/admin/announcements', name: 'Announcements', icon: Megaphone },
+    { path: '/admin/media', name: 'Media', icon: Newspaper },
     { path: '/admin/site-content', name: 'Site Content', icon: LayoutTemplate },
     { path: '/admin/subscribers', name: 'Audience', icon: UserCheck },
     { path: '/admin/settings', name: 'Settings', icon: SettingsIcon },
@@ -640,6 +685,7 @@ const AdminLayout = ({ onLogout, showToast }) => {
               <Route path="/projects" element={<Projects showToast={showToast} />} />
               <Route path="/reports" element={<Reports showToast={showToast} />} />
               <Route path="/announcements" element={<Announcements showToast={showToast} />} />
+              <Route path="/media" element={<MediaManager showToast={showToast} />} />
               <Route path="/site-content" element={<SiteContentManager showToast={showToast} />} />
               <Route path="/subscribers" element={<Subscribers showToast={showToast} />} />
               <Route path="/settings" element={<Settings showToast={showToast} />} />
@@ -1291,6 +1337,164 @@ const Reports = ({ showToast }) => {
   );
 };
 
+const MediaManager = ({ showToast }) => {
+  const [items, setItems] = useState([]);
+  const [form, setForm] = useState({ title:'', description:'', type:'', link:'', mainImage:'' });
+  const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const token = localStorage.getItem('admin_token') || '';
+
+  const load = async () => {
+    try {
+      const res = await fetch(`${apiBase}/api/media`);
+      const data = await res.json();
+      if (data.success) setItems(data.media);
+    } catch (err) {
+      showToast('Failed to load media', 'error');
+    }
+  };
+  useEffect(()=>{ load(); },[]);
+
+  const filteredItems = items.filter(p => 
+    p.title.toLowerCase().includes(search.toLowerCase()) || 
+    p.description.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const url = editingId ? `${apiBase}/api/media/${editingId}` : `${apiBase}/api/media`;
+      const method = editingId ? 'PUT' : 'POST';
+      const payload = { ...form };
+      if (!payload.type) payload.type = 'News';
+      
+      const res = await fetch(url, {
+        method, headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) { 
+        showToast('Media saved');
+        setForm({ title:'', description:'', type:'', link:'', mainImage:'' }); 
+        setEditingId(null);
+        load(); 
+      } else showToast(data.message, 'error');
+    } catch (err) { showToast('Error', 'error'); } finally { setLoading(false); }
+  };
+
+  const startEdit = (p) => {
+    setEditingId(p._id || p.id);
+    setForm({ title: p.title, description: p.description, type: p.type || '', link: p.link || '', mainImage: p.mainImage || p.media || p.image || ''});
+    setIsFormOpen(true);
+  };
+  const cancelEdit = () => { setEditingId(null); setForm({ title:'', description:'', type:'', link:'', mainImage:'' }); setIsFormOpen(false); };
+  
+  const remove = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/media/${confirmDelete.id}`, { method:'DELETE', headers:{ Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.success) { showToast('Purged.'); setConfirmDelete({ open: false, id: null }); load(); }
+    } catch (err) { showToast('Failed', 'error'); } finally { setLoading(false); }
+  };
+
+  return (
+    <div className="space-y-12">
+      <ConfirmModal isOpen={confirmDelete.open} title="Purge Record?" message="Confirm permanent deletion." onConfirm={remove} onCancel={() => setConfirmDelete({ open: false, id: null })} loading={loading}/>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Media Records</h2>
+          <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Media Uploads</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <div className="relative group flex-1 md:flex-none">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
+            <input 
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search Media..." 
+              className="pl-12 pr-6 py-[18px] rounded-full bg-white border border-gray-100 shadow-sm focus:shadow-md focus:border-gray-200 outline-none transition-all w-full md:w-72 font-bold text-gray-900 placeholder-gray-400" 
+            />
+          </div>
+          <ShinyButton onClick={() => setIsFormOpen(!isFormOpen)} variant={isFormOpen ? "danger" : "primary"} className={cn("transition-all rounded-full px-8 py-4", isFormOpen && "transform -rotate-[15deg] bg-red-50 text-red-500 border border-red-100 shadow-none hover:bg-red-100")}>
+            {isFormOpen ? <X size={20} /> : "Upload Media"}
+          </ShinyButton>
+        </div>
+      </div>
+      <AnimatePresence>
+        {isFormOpen && (
+          <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+            <SpotlightCard title="Upload Media Record">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <PremiumInput label="Headline" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
+                <PremiumSelect 
+                  label="Category" 
+                  value={form.type} 
+                  onChange={e=>setForm({...form,type:e.target.value})} 
+                  required 
+                  options={[
+                    { value: 'News', label: 'News' },
+                    { value: 'Event', label: 'Event' },
+                    { value: 'Award', label: 'Award' },
+                    { value: 'Press Release', label: 'Press Release' },
+                  ]}
+                />
+                <PremiumInput label="External Link (Optional)" value={form.link} onChange={e=>setForm({...form,link:e.target.value})} type="url" />
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Upload Media Cover</label>
+                  <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                              if (file.size > 61440) return showToast('Image cannot exceed 60KB', 'error');
+                              const reader = new FileReader();
+                              reader.onloadend = () => setForm({...form, mainImage: reader.result});
+                              reader.readAsDataURL(file);
+                          }
+                      }}
+                      className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                  />
+                  {form.mainImage && <img src={form.mainImage} alt="Preview" className="h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200" />}
+                </div>
+                <div className="space-y-2"><textarea value={form.description} onChange={e=>setForm({...form,description:e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-6 h-32 focus:bg-white" placeholder="Content Description..."/></div>
+                <div className="flex gap-4"><ShinyButton className="flex-1" loading={loading}>{editingId?"Update Record":"Upload Record"}</ShinyButton></div>
+              </form>
+            </SpotlightCard>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="grid gap-6">
+        {filteredItems.map(p=>(
+          <div key={p._id || p.id} className="bg-white rounded-xl p-8 border border-gray-100 shadow-md flex justify-between items-center">
+            <div className="flex items-center gap-6">
+               {(p.media || p.image || p.mainImage) && (
+                 <img src={p.media || p.image || p.mainImage} alt={p.title} className="w-24 h-24 rounded-lg object-cover bg-gray-100" />
+               )}
+               <div>
+                  <h3 className="text-xl font-bold">{p.title}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                     <span className="text-xs font-bold text-indigo-500 uppercase tracking-widest">{p.type}</span>
+                  </div>
+                  <p className="text-gray-500 text-sm mt-2 max-w-lg line-clamp-2">{p.description}</p>
+               </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={()=>startEdit(p)} className="p-3 bg-gray-100 rounded-xl"><Edit3 size={16}/></button>
+              <button onClick={()=>setConfirmDelete({open:true,id:p._id || p.id})} className="p-3 bg-red-50 text-red-500 rounded-xl"><Trash2 size={16}/></button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Announcements = ({ showToast }) => {
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({ title:'', description:'', media:'' });
@@ -1825,7 +2029,7 @@ const CarouselManager = ({ showToast }) => {
       <ConfirmModal 
         isOpen={confirmDelete.open} 
         title="Remove Image?" 
-        message="This will remove the image from the 3D Carousel." 
+        message="This will remove the image from the Home Page Hero Section." 
         onConfirm={remove} 
         onCancel={() => setConfirmDelete({ open: false, id: null })} 
         loading={loading}
@@ -1837,7 +2041,7 @@ const CarouselManager = ({ showToast }) => {
           <input 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search Carousel Images..." 
+            placeholder="Search Hero Images..." 
             className="pl-12 pr-6 py-3 rounded-xl bg-white border border-gray-200 shadow-sm outline-none transition-all w-full font-medium text-gray-900" 
           />
         </div>
@@ -2129,16 +2333,16 @@ const TestimonialsAdmin = ({ showToast }) => {
 };
 
 const SiteContentManager = ({ showToast }) => {
-  const [activeTab, setActiveTab] = useState('carousel');
+  const [activeTab, setActiveTab] = useState('hero');
 
   return (
     <div className="space-y-6">
       <div className="flex gap-4 border-b border-gray-200 pb-2">
         <button 
-          onClick={() => setActiveTab('carousel')} 
-          className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'carousel' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
+          onClick={() => setActiveTab('hero')} 
+          className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'hero' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
         >
-          Carousel Photos
+          Home Page Hero Section
         </button>
         <button 
           onClick={() => setActiveTab('testimonials')} 
@@ -2148,7 +2352,7 @@ const SiteContentManager = ({ showToast }) => {
         </button>
       </div>
       
-      {activeTab === 'carousel' ? (
+      {activeTab === 'hero' ? (
         <CarouselManager showToast={showToast} />
       ) : (
         <TestimonialsAdmin showToast={showToast} />
