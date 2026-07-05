@@ -84,7 +84,9 @@ const Home = () => {
                   <div className="w-full h-[500px] bg-gray-100 rounded-xl overflow-hidden relative shadow-2xl">
                       <img 
                         src={aboutImage} 
-                        alt="About Samikaran" 
+                        alt="About Samikaran"
+                        width="800"
+                        height="500"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
                       />
                   </div>
@@ -121,6 +123,7 @@ const Home = () => {
           >
             <button 
               onClick={closeModal}
+              aria-label="Close modal"
               className="absolute top-4 right-4 md:top-10 md:right-10 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all z-[110]"
             >
               <X size={24} className="md:w-7 md:h-7" />
@@ -143,10 +146,10 @@ const Home = () => {
 
                 {/* Navigation Arrows */}
                 <div className="absolute inset-0 flex items-center justify-between px-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={prevImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
+                  <button aria-label="Previous image" onClick={prevImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
                     <ChevronLeft size={32} />
                   </button>
-                  <button onClick={nextImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
+                  <button aria-label="Next image" onClick={nextImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
                     <ChevronRight size={32} />
                   </button>
                 </div>

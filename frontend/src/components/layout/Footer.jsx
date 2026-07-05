@@ -21,7 +21,7 @@ const Footer = () => {
                     </p>
                     <div className="flex gap-4">
                         {[Facebook, Instagram, Linkedin].map((Icon, i) => (
-                            <a key={i} href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white hover:scale-110 transform">
+                            <a key={i} href="#" aria-label="Social media link" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white hover:scale-110 transform">
                                 <Icon size={20} />
                             </a>
                         ))}

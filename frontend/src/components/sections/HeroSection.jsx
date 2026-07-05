@@ -3,11 +3,11 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { Heart } from 'lucide-react';
+import heroBg from '../../assets/media/hero_bg.webp';
 
 const HeroSection = () => {
   const [currentHeroIdx, setCurrentHeroIdx] = useState(0);
   
-  import heroBg from '../../assets/media/hero_bg.webp';
   const hardcodedImage = heroBg;
   const [heroImages, setHeroImages] = useState([hardcodedImage]);
 
