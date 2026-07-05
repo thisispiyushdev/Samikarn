@@ -76,22 +76,14 @@ mountRoutes('/api');
 // Mount without /api prefix just in case Vercel rewrites strip the prefix when routing to the backend service
 mountRoutes('');
 
-// Serve Frontend Static Files
-if (!process.env.VERCEL) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+// Serve a basic response for the root URL
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Samikaran API is running' });
+});
 
-  app.use(express.static(frontendDistPath));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendDistPath, 'index.html'));
-  });
-} else {
-  // On Vercel, return 404 for unmatched routes instead of throwing an error by looking for local files
-  app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'API route not found on backend service' });
-  });
-}
+// Fallback for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found on backend service' });
+});
 
 export default app;
