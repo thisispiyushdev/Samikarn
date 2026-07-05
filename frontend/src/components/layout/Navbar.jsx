@@ -33,7 +33,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center group shrink-0 h-16 md:h-20 w-40 md:w-56 overflow-hidden" onClick={() => dispatch(closeMobileMenu())}>
-            <img src="/logo.png" alt="Samikaran Logo" className="w-[180%] md:w-[160%] max-w-none h-auto object-contain origin-center transition-transform duration-300 group-hover:scale-105" />
+            <img src="/logo.png" alt="Samikaran Logo" className="w-[60%] md:w-[180%] max-w-[80%] h-auto object-contain origin-center transition-transform duration-300 group-hover:scale-105" />
         </Link>
         
         {/* Desktop Nav */}
