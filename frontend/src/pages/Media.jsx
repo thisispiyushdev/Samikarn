@@ -3,23 +3,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ExternalLink, Newspaper, Award, PlayCircle, Search, Filter } from 'lucide-react';
 
 const Media = () => {
-  const [items, setItems] = useState([]);
+  const [mediaItems, setMediaItems] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) setItems(data.media);
-      });
+    Promise.all([
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`).then(r => r.json()),
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(r => r.json())
+    ]).then(([mediaRes, annRes]) => {
+      if (mediaRes.success && mediaRes.media) {
+        setMediaItems(mediaRes.media.sort((a, b) => new Date(b.date) - new Date(a.date)));
+      }
+      if (annRes.success && annRes.announcements) {
+        const ann = annRes.announcements.map(a => ({
+          ...a,
+          type: a.type || 'Announcement',
+          mainImage: a.image || a.media || a.mainImage || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop',
+          date: a.date || a.createdAt
+        }));
+        setAnnouncements(ann.sort((a, b) => new Date(b.date) - new Date(a.date)));
+      }
+    }).catch(err => console.error("Failed to fetch media/announcements:", err));
   }, []);
 
-  const filteredItems = items.filter(item => {
+  const filteredMedia = mediaItems.filter(item => {
     const matchesFilter = filter === 'All' || item.type === filter;
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
-                          item.description.toLowerCase().includes(search.toLowerCase());
+                          (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
     return matchesFilter && matchesSearch;
+  });
+
+  const filteredAnnouncements = announcements.filter(item => {
+    return item.title.toLowerCase().includes(search.toLowerCase()) || 
+           (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
   });
 
   return (
@@ -56,7 +74,7 @@ const Media = () => {
       </section>
 
       {/* Dynamic Marquee Component */}
-      {items.length > 0 && (
+      {mediaItems.length > 0 && (
         <div className="bg-primary text-white py-4 overflow-hidden flex border-y border-primary/20 shadow-inner">
           <motion.div
             className="flex whitespace-nowrap gap-12 items-center"
@@ -64,11 +82,11 @@ const Media = () => {
             transition={{
               repeat: Infinity,
               ease: "linear",
-              duration: Math.max(items.length * 3, 10),
+              duration: Math.max(mediaItems.length * 3, 10),
             }}
           >
             {/* Duplicated list for seamless infinite scroll */}
-            {[...items, ...items].map((item, idx) => (
+            {[...mediaItems, ...mediaItems].map((item, idx) => (
               <div key={idx} className="flex items-center gap-12">
                 <span className="text-sm font-black uppercase tracking-[0.2em]">
                   {item.title}
@@ -108,12 +126,81 @@ const Media = () => {
         </div>
       </section>
 
+      {/* Announcements Grid */}
+      {filteredAnnouncements.length > 0 && (
+        <section className="py-16 bg-gray-50 border-b border-gray-100">
+          <div className="container mx-auto px-4">
+            <div className="mb-12">
+              <h2 className="text-sm font-bold text-secondary uppercase tracking-widest mb-2">Updates</h2>
+              <h3 className="text-4xl font-bold text-gray-900">Latest Announcements</h3>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+              <AnimatePresence mode="popLayout">
+                {filteredAnnouncements.map((item, idx) => (
+                  <motion.div 
+                    key={item._id || item.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.5, delay: idx * 0.05 }}
+                    className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden"
+                  >
+                    <div className="h-64 relative overflow-hidden">
+                      <img 
+                        src={item.mainImage} 
+                        alt={item.title} 
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                      />
+                      <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] shadow-xl">
+                        {item.type}
+                      </div>
+                    </div>
+
+                    <div className="p-10">
+                      <div className="flex items-center gap-2 mb-4 text-secondary">
+                        <Calendar size={14} />
+                        <span className="text-[10px] font-black uppercase tracking-widest">{new Date(item.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
+                      </div>
+                      <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight leading-tight uppercase group-hover:text-secondary transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-400 font-medium text-sm line-clamp-3 mb-8 leading-relaxed">
+                        {item.description}
+                      </p>
+                      
+                      <div className="pt-8 border-t border-gray-50 flex items-center justify-between">
+                        <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Announcement</span>
+                        {item.link && (
+                          <a 
+                            href={item.link} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="flex items-center gap-2 text-secondary font-black text-xs tracking-widest hover:translate-x-1 transition-transform"
+                          >
+                            READ FULL <ExternalLink size={16} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Media Grid */}
       <section className="py-24">
         <div className="container mx-auto px-4">
+          <div className="mb-12">
+            <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">In the News</h2>
+            <h3 className="text-4xl font-bold text-gray-900">Media Coverage</h3>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             <AnimatePresence mode="popLayout">
-              {filteredItems.map((item, idx) => (
+              {filteredMedia.map((item, idx) => (
                 <motion.div 
                   key={item._id || item.id}
                   layout
@@ -165,7 +252,7 @@ const Media = () => {
             </AnimatePresence>
           </div>
 
-          {filteredItems.length === 0 && (
+          {filteredMedia.length === 0 && filteredAnnouncements.length === 0 && (
             <div className="py-40 text-center">
               <div className="w-24 h-24 rounded-full bg-gray-50 flex items-center justify-center text-gray-200 mx-auto mb-8">
                 <Newspaper size={48} />
