@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, ArrowRight, Calendar, ExternalLink, X, MapPin, CheckCircle, Heart, Megaphone, TrendingUp, Users, BookOpen } from 'lucide-react';
+import { FileText, ArrowRight, Calendar, ExternalLink, X, MapPin, CheckCircle, Heart, Megaphone, TrendingUp, Users, BookOpen, FolderHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BentoCard = ({ children, className, delay = 0, onClick, hoverable = true }) => (
@@ -182,6 +182,44 @@ const Impact = () => {
                   </motion.div>
               </div>
           </div>
+      </section>
+
+      {/* Live Projects & Reports Section */}
+      <section className="py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Live Updates</h2>
+            <h3 className="text-4xl font-bold text-gray-900">Active Missions & Reports</h3>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {liveProjects.map((project, i) => (
+              <BentoCard 
+                key={project.id} 
+                delay={i * 0.1}
+                onClick={() => setSelectedItem(project)}
+                className="p-0!"
+              >
+                <div className="h-48 bg-gray-100 relative overflow-hidden rounded-t-xl">
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <FolderHeart size={40} />
+                    </div>
+                  )}
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase text-gray-900 tracking-widest">
+                    {project.status || 'Active'}
+                  </div>
+                </div>
+                <div className="p-8">
+                  <h3 className="text-xl font-black text-gray-900 mb-3">{project.title}</h3>
+                  <p className="text-gray-500 font-bold text-sm line-clamp-3">{project.description}</p>
+                </div>
+              </BentoCard>
+            ))}
+          </div>
+        </div>
       </section>
       <AnimatePresence>
         {selectedItem && (
