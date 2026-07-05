@@ -28,7 +28,7 @@ const Home = () => {
   const [currentMomentsSlide, setCurrentMomentsSlide] = useState(0);
 
   useEffect(() => {
-    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`)
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/gallery`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setGalleryItems(data.gallery);
