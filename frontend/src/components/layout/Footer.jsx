@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { cachedFetch } from '../../utils/cachedFetch';
 
 const Footer = () => {
   const [settings, setSettings] = useState({ address:'', phone:'', email:'' });
   useEffect(()=>{
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
       .then(r=>r.json())
       .then(d=>{ if (d.success) setSettings(d.settings); })
       .catch(()=>{});

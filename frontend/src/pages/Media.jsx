@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ExternalLink, Newspaper, Award, PlayCircle, Search, Filter } from 'lucide-react';
+import { cachedFetch } from '../utils/cachedFetch';
 
 const Media = () => {
   const [mediaItems, setMediaItems] = useState([]);
@@ -10,8 +11,8 @@ const Media = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`).then(r => r.json()),
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(r => r.json())
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`).then(r => r.json()),
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(r => r.json())
     ]).then(([mediaRes, annRes]) => {
       if (mediaRes.success && mediaRes.media) {
         setMediaItems(mediaRes.media.sort((a, b) => new Date(b.date) - new Date(a.date)));

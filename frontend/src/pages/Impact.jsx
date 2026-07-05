@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, ArrowRight, Calendar, ExternalLink, X, MapPin, CheckCircle, Heart, Megaphone, TrendingUp, Users, BookOpen } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { cachedFetch } from '../utils/cachedFetch';
+
 const BentoCard = ({ children, className, delay = 0, onClick, hoverable = true }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -30,10 +32,10 @@ const Impact = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects`).then(res => res.json()),
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/reports`).then(res => res.json()),
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(res => res.json()),
-      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`).then(res => res.json()).catch(() => ({}))
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects`).then(res => res.json()),
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/reports`).then(res => res.json()),
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(res => res.json()),
+      cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`).then(res => res.json()).catch(() => ({}))
     ]).then(([p, r, a, s]) => {
       if(p.success) setLiveProjects(p.projects);
       if(r.success) setLiveReports(r.reports);

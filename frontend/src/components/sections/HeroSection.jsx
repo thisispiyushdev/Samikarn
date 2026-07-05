@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { Heart } from 'lucide-react';
 
+import { cachedFetch } from '../../utils/cachedFetch';
+
 const HeroSection = () => {
   const [currentHeroIdx, setCurrentHeroIdx] = useState(0);
   
@@ -13,7 +15,7 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`);
+        const res = await cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`);
         const data = await res.json();
         if (data.success && data.media.length > 0) {
           setHeroImages([hardcodedImage, ...data.media.map(m => m.mainImage || m.url)]);

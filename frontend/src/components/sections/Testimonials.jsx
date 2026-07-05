@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import { cachedFetch } from '../../utils/cachedFetch';
+
 const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 
 const TestimonialCard = ({ name, role, text, avatar }) => (
@@ -28,7 +30,7 @@ const Testimonials = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const res = await fetch(`${apiBase}/api/testimonials`);
+        const res = await cachedFetch(`${apiBase}/api/testimonials`);
         const data = await res.json();
         if (data.success) {
            setTestimonials(data.testimonials.filter(t => t.is_active));
