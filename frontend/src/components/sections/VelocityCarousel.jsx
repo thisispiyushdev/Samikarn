@@ -54,10 +54,9 @@ const VelocityCarousel = ({ items = [], onImageClick }) => {
             const isAnyHovered = hoveredIndex !== null;
             
             return (
-              <motion.div
+              <div
                 key={`${item._id || item.id}-${idx}`}
                 onMouseEnter={() => setHoveredIndex(idx)}
-                layout
                 className={`relative flex-shrink-0 cursor-pointer overflow-hidden rounded-3xl transition-all duration-500 ease-out`}
                 style={{
                   width: isCardHovered ? '700px' : '480px',
@@ -87,7 +86,7 @@ const VelocityCarousel = ({ items = [], onImageClick }) => {
                     </span>
                   </div>
 
-                  <motion.div layout="position">
+                  <div>
                     <h3 className="text-2xl font-bold mb-2 leading-tight drop-shadow-md">
                       {item.title}
                     </h3>
@@ -116,9 +115,9 @@ const VelocityCarousel = ({ items = [], onImageClick }) => {
                         View Details <ArrowRight size={14} />
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </motion.div>
