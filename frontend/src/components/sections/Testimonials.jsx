@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const apiBase = '';
+const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 
 const TestimonialCard = ({ name, role, text, avatar }) => (
   <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md border-primary transition-shadow duration-300 w-full mb-6 break-inside-avoid">

@@ -8,7 +8,7 @@ const Media = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('/api/media')
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media')
       .then(r => r.json())
       .then(data => {
         if (data.success) setItems(data.media);

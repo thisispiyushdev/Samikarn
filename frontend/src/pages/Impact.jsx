@@ -30,10 +30,10 @@ const Impact = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/projects').then(res => res.json()),
-      fetch('/api/reports').then(res => res.json()),
-      fetch('/api/announcements').then(res => res.json()),
-      fetch('/api/settings').then(res => res.json()).catch(() => ({}))
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects').then(res => res.json()),
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/reports').then(res => res.json()),
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements').then(res => res.json()),
+      fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings').then(res => res.json()).catch(() => ({}))
     ]).then(([p, r, a, s]) => {
       if(p.success) setLiveProjects(p.projects);
       if(r.success) setLiveReports(r.reports);

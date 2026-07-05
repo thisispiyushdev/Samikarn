@@ -41,7 +41,7 @@ const Donate = () => {
 
         try {
             // 1. Create Order
-            const orderResponse = await fetch('/api/payment/order', {
+            const orderResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount, name: donorName, email: donorEmail, contact: donorContact }),
@@ -56,7 +56,7 @@ const Donate = () => {
             }
 
             // 2. Open Razorpay Checkout
-            const keyResponse = await fetch('/api/payment/key');
+            const keyResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/key');
             const keyData = await keyResponse.json();
             
             const options = {
@@ -69,7 +69,7 @@ const Donate = () => {
                 order_id: orderData.order.id,
                 handler: async function (response) {
                     // 3. Verify Payment
-                    const verifyResponse = await fetch('/api/payment/verify', {
+                    const verifyResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/verify', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
   const [settings, setSettings] = useState({ address:'', phone:'', email:'' });
   useEffect(()=>{
-    fetch('/api/settings')
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings')
       .then(r=>r.json())
       .then(d=>{ if (d.success) setSettings(d.settings); })
       .catch(()=>{});
@@ -66,7 +66,7 @@ const Footer = () => {
                         if (!email) return;
 
                         try {
-                            const response = await fetch('/api/subscribers', {
+                            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/subscribers', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ email }),

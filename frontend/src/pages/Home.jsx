@@ -26,13 +26,13 @@ const Home = () => {
   const [currentMomentsSlide, setCurrentMomentsSlide] = useState(0);
 
   useEffect(() => {
-    fetch('/api/media')
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media')
       .then(r => r.json())
       .then(data => {
         if (data.success) setMediaItems(data.media);
       });
     
-    fetch('/api/settings')
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings')
       .then(r => r.json())
       .then(data => {
         if (data.success && data.settings.impactStats) {
@@ -40,7 +40,7 @@ const Home = () => {
         }
       });
 
-    fetch('/api/projects')
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects')
       .then(r => r.json())
       .then(data => {
         if (data.success) setLiveProjects(data.projects);
