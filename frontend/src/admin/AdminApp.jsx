@@ -337,7 +337,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const res = await fetch(`${apiBase}/api/admin/login`, {
-        method: `POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
@@ -437,7 +437,7 @@ const Bootstrap = () => {
     setStatus({ type: '', msg: '' });
     try {
       const res = await fetch(`${apiBase}/api/admin/bootstrap`, {
-        method: `POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
@@ -684,7 +684,7 @@ const Dashboard = ({ showToast }) => {
 
         // Aggregate recent activity
         const activities = [];
-        if (p.success) p.projects.slice(0, 3).forEach(item => activities.push({ type: `PROJECT', name: item.title, time: item.createdAt, icon: FolderHeart, color: 'text-emerald-500' }));
+        if (p.success) p.projects.slice(0, 3).forEach(item => activities.push({ type: 'PROJECT', name: item.title, time: item.createdAt, icon: FolderHeart, color: 'text-emerald-500' }));
         if (m.success) m.media.slice(0, 3).forEach(item => activities.push({ type: 'MEDIA', name: item.title, time: item.createdAt, icon: Newspaper, color: 'text-blue-500' }));
         if (s.success) s.subscribers.slice(0, 3).forEach(item => activities.push({ type: 'SUBSCRIBER', name: item.email, time: item.createdAt, icon: Mail, color: 'text-purple-500' }));
         
@@ -892,7 +892,7 @@ const Projects = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/projects/${confirmDelete.id}`, { 
-        method:`DELETE', 
+        method:'DELETE', 
         headers:{ Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
@@ -1171,7 +1171,7 @@ const Reports = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/reports/${confirmDelete.id}`, { 
-        method:`DELETE', 
+        method:'DELETE', 
         headers:{ Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
@@ -1345,7 +1345,7 @@ const Announcements = ({ showToast }) => {
   const remove = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiBase}/api/announcements/${confirmDelete.id}`, { method:`DELETE', headers:{ Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${apiBase}/api/announcements/${confirmDelete.id}`, { method:'DELETE', headers:{ Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (data.success) { showToast('Purged.'); setConfirmDelete({ open: false, id: null }); load(); }
     } catch (err) { showToast('Failed', 'error'); } finally { setLoading(false); }
@@ -1452,7 +1452,7 @@ const Subscribers = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/subscribers/${confirmDelete.id}`, { 
-        method: `DELETE', 
+        method: 'DELETE', 
         headers: { Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
@@ -1588,7 +1588,7 @@ const Settings = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/admin/users`, {
-        method:`POST',
+        method:'POST',
         headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(form)
       });
@@ -1611,7 +1611,7 @@ const Settings = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/admin/users/${confirmDelete.id}`, { 
-        method:`DELETE', 
+        method:'DELETE', 
         headers:{ Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
@@ -1631,7 +1631,7 @@ const Settings = ({ showToast }) => {
     e.preventDefault();
     try {
       const res = await fetch(`${apiBase}/api/settings`, {
-        method:`PUT',
+        method:'PUT',
         headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(site)
       });
@@ -1804,7 +1804,7 @@ const CarouselManager = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/media/${confirmDelete.id}`, { 
-        method:`DELETE', 
+        method:'DELETE', 
         headers:{ Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
@@ -1991,7 +1991,7 @@ const TestimonialsAdmin = ({ showToast }) => {
     setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/testimonials/${confirmDelete.id}`, { 
-        method:`DELETE', 
+        method:'DELETE', 
         headers:{ Authorization: `Bearer ${token}` } 
       });
       const data = await res.json();
