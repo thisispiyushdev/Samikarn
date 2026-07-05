@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const faqs = [
   { q: "What is Samikaran?", a: "Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth, especially from underserved communities." },
   { q: "What kind of programs does Samikaran conduct?", a: "Samikaran conducts activity-based workshops and learning programs that focus on social-emotional learning, English comprehension, communication skills, and professional development for students." },
-  { q: "Who can participate in Samikaran’s programs?", a: "Our programs are designed for school students, college students, and ITI students. Different workshops are tailored to suit the needs of each age group." },
+  { q: "Who can participate in Samikaran’s programs?", a: "Our program designed for school students, college students, ITI students, Orphanage and old-age homes. Different workshops are tailored to suit the needs of each group." },
   { q: "What is the Baat-Cheet program?", a: "Baat-Cheet is an activity-based learning program focused on social-emotional learning and English comprehension. It encourages children to express their thoughts, understand emotions, and communicate more confidently." },
   { q: "What is the Sahi Manzil workshop?", a: "Sahi Manzil is a professional development workshop designed to help students build practical skills such as communication, digital literacy, and career awareness." },
   { q: "Can schools or colleges collaborate with Samikaran?", a: "Yes. Samikaran actively collaborates with schools, colleges, and training institutions to conduct workshops and learning programs for students." },
@@ -74,28 +74,10 @@ const About = () => {
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1524069290683-0457abfe42c3?q=80&w=2070&auto=format&fit=crop" 
-            alt="Children smiling" 
-            className="w-full h-full object-cover brightness-50"
+            src="https://i.ibb.co/qXrvb6v/IMG-8797.jpg" 
+            alt="Samikaran Team" 
+            className="w-full h-full object-cover"
           />
-        </div>
-        <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6 tracking-tight"
-          >
-            Finding Your Voice, <br/> Finding Your Way
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl md:text-2xl font-light text-gray-100 max-w-2xl mx-auto"
-          >
-            Samikaran was founded to bridge opportunity gaps and enable individuals to lead lives of purpose — not as a privilege, but as a right.
-          </motion.p>
         </div>
       </section>
 
@@ -110,12 +92,11 @@ const About = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Our Story</h2>
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Bridging the Gap</h3>
             <p className="text-gray-600 text-lg leading-relaxed mb-4">
-              We build communication and professional skills to strengthen confidence in underserved communities, enabling individuals to lead lives of purpose.
+              Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth, especially from underserved communities.
             </p>
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              At Samikaran, we believe that when people find their voice, they find their way.
+              Our focus is simple: to build an able society where every individual leads a life of purpose.
             </p>
           </motion.div>
           <motion.div 
@@ -123,13 +104,13 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="relative w-4/5 lg:w-3/4 mx-auto"
           >
-            <div className="absolute -inset-4 bg-secondary/20 rounded-xl transform rotate-3"></div>
+            <div className="absolute -inset-4 bg-secondary/20 rounded-2xl transform rotate-3"></div>
             <img 
-              src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop" 
+              src="https://i.ibb.co/jPkyZtvC/Untitled-design.png" 
               alt="Community work" 
-              className="relative rounded-xl shadow-xl w-full h-[500px] object-cover"
+              className="relative rounded-xl shadow-xl w-full h-auto object-cover"
             />
           </motion.div>
         </div>
@@ -229,11 +210,12 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                  { title: "Empowerment", desc: "Every individual has the potential to grow when given the right support, encouragement, and opportunities.", icon: <Zap /> },
-                  { title: "Inclusion", desc: "We aim to create spaces where everyone feels respected, heard, and valued regardless of their background.", icon: <Users /> },
-                  { title: "Confidence Building", desc: "Confidence is at the heart of our work. We focus on helping students believe in their abilities.", icon: <Star /> },
-                  { title: "Collaboration", desc: "Meaningful change happens when communities, educators, and organizations work together.", icon: <Globe /> },
-                  { title: "Continuous Learning", desc: "We remain open to learning from every experience, constantly improving our programs.", icon: <Compass /> },
+                  { title: "Empowerment", desc: "Every individual has the potential to grow when given the right support, encouragement, and opportunities.", icon: <Zap strokeWidth={1.5} size={32} /> },
+                  { title: "Inclusion", desc: "We aim to create spaces where everyone feels respected, heard, and valued regardless of their background.", icon: <Users strokeWidth={1.5} size={32} /> },
+                  { title: "Confidence Building", desc: "Confidence is at the heart of our work. We focus on helping students believe in their abilities.", icon: <Star strokeWidth={1.5} size={32} /> },
+                  { title: "Collaboration", desc: "Meaningful change happens when communities, educators, and organizations work together.", icon: <Globe strokeWidth={1.5} size={32} /> },
+                  { title: "Continuous Learning", desc: "We remain open to learning from every experience, constantly improving our programs.", icon: <Compass strokeWidth={1.5} size={32} /> },
+                  { title: "Purpose Driven", desc: "Helping individuals discover their calling and lead a life driven by meaningful intentions.", icon: <Heart strokeWidth={1.5} size={32} /> },
               ].map((value, idx) => (
                   <motion.div 
                     key={idx}
@@ -241,13 +223,13 @@ const About = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 border border-gray-100 rounded-xl hover:shadow-xl transition-all group bg-white"
+                    className="p-8 h-full bg-white rounded-2xl border border-gray-50 hover:border-transparent hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group"
                   >
-                      <div className="w-12 h-12 bg-gray-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                      <div className="text-primary/80 mb-6 group-hover:text-primary transition-colors">
                           {value.icon}
                       </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-3">{value.title}</h4>
-                      <p className="text-gray-600">
+                      <h4 className="text-xl font-semibold text-gray-900 mb-3 tracking-tight">{value.title}</h4>
+                      <p className="text-gray-500 leading-relaxed font-light">
                           {value.desc}
                       </p>
                   </motion.div>
@@ -261,7 +243,7 @@ const About = () => {
           <div className="text-center mb-16">
               <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Have Questions?</h2>
               <h3 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">Frequently Asked Questions</h3>
-              <p className="text-gray-500 text-lg">Everything you need to know about our initiatives.</p>
+              <p className="text-gray-500 text-lg">Everything you need to know about us.</p>
           </div>
           <div className="space-y-4">
             {faqs.map((faq, index) => (

@@ -17,10 +17,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">SAMIKARAN</h3>
                     <p className="text-gray-400 mb-6 leading-relaxed">
-                        Empowering communities and creating sustainable change through education, livelihood and healthcare.
+                        Empowering communities and creating sustainable change through education, livelihood and health.
                     </p>
                     <div className="flex gap-4">
-                        {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                        {[Facebook, Instagram, Linkedin].map((Icon, i) => (
                             <a key={i} href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white hover:scale-110 transform">
                                 <Icon size={20} />
                             </a>
