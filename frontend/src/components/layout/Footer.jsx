@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Mailbox } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cachedFetch } from '../../utils/cachedFetch';
 
@@ -44,7 +44,7 @@ const Footer = () => {
                     <h4 className="text-lg font-semibold mb-6 border-b-2 border-primary inline-block pb-2">Contact Info</h4>
                     <ul className="space-y-4 text-gray-400">
                         <li className="flex gap-3 items-start">
-                            <MapPin className="mt-1 shrink-0 text-primary" size={20} />
+                            <Mailbox className="mt-1 shrink-0 text-primary" size={20} />
                             <span>{settings.address || '—'}</span>
                         </li>
                         <li className="flex gap-3 items-center">

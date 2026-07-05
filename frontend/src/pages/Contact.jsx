@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Mailbox } from 'lucide-react';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Button } from '@/components/base/buttons/button';
@@ -81,7 +81,7 @@ const Contact = () => {
               <div className="space-y-8">
                  <div className="flex items-start gap-4 group">
                     <div className="p-4 bg-primary/10 text-primary rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                        <MapPin size={28} />
+                        <Mailbox size={28} />
                     </div>
                     <div>
                         <h4 className="font-bold text-gray-900 text-lg mb-1">Our Office</h4>
