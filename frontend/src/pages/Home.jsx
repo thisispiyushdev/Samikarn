@@ -14,7 +14,7 @@ import DepthBlurCarousel from '../components/sections/DepthBlurCarousel';
 import Snap3DCarousel from '../components/sections/Snap3DCarousel';
 
 const Home = () => {
-  const [mediaItems, setMediaItems] = useState([]);
+  const [galleryItems, setGalleryItems] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
   const [impactStats, setImpactStats] = useState({
@@ -26,10 +26,10 @@ const Home = () => {
   const [currentMomentsSlide, setCurrentMomentsSlide] = useState(0);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/gallery`)
       .then(r => r.json())
       .then(data => {
-        if (data.success) setMediaItems(data.media);
+        if (data.success) setGalleryItems(data.gallery);
       });
     
     fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
@@ -109,7 +109,7 @@ const Home = () => {
       <LiveProjects liveProjects={liveProjects} />
 
       {/* Moments Carousel Section — Stacked Card Parallax */}
-      <Snap3DCarousel items={mediaItems} onImageClick={(item, idx) => openModal(mediaItems[idx])} />
+      <Snap3DCarousel items={galleryItems} onImageClick={(item, idx) => openModal(galleryItems[idx])} />
 
       {/* Playbook Event Modal */}
       <AnimatePresence>
@@ -122,9 +122,9 @@ const Home = () => {
           >
             <button 
               onClick={closeModal}
-              className="absolute top-10 right-10 w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all z-[110]"
+              className="absolute top-4 right-4 md:top-10 md:right-10 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all z-[110]"
             >
-              <X size={28} />
+              <X size={24} className="md:w-7 md:h-7" />
             </button>
 
             <div className="container mx-auto h-full flex flex-col md:flex-row gap-10 items-center">

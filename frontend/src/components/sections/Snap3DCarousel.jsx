@@ -8,6 +8,13 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Auto-play logic
   useEffect(() => {
@@ -46,8 +53,15 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
     let zIndex = 50;
     
     // Landscape dimensions for center card
-    const centerWidth = 600;
-    const centerHeight = 400;
+    const isMobile = windowWidth < 768;
+    const centerWidth = isMobile ? windowWidth * 0.8 : 600;
+    const centerHeight = isMobile ? centerWidth * (4/6) : 400;
+    
+    // Adjust x offsets for mobile to prevent them from flying offscreen
+    const offset1 = isMobile ? centerWidth * 0.6 : 320;
+    const offset2 = isMobile ? centerWidth * 0.9 : 500;
+    const offset3 = isMobile ? centerWidth * 1.1 : 620;
+    const offsetHidden = isMobile ? centerWidth * 1.3 : 700;
 
     if (absDistance === 0) {
       // Center
@@ -59,25 +73,25 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
       // 1st neighbor
       scale = 0.65;
       opacity = 0.8;
-      x = distance > 0 ? 320 : -320;
+      x = distance > 0 ? offset1 : -offset1;
       zIndex = 40;
     } else if (absDistance === 2) {
       // 2nd neighbor
       scale = 0.45;
       opacity = 0.5;
-      x = distance > 0 ? 500 : -500;
+      x = distance > 0 ? offset2 : -offset2;
       zIndex = 30;
     } else if (absDistance === 3) {
       // 3rd neighbor
       scale = 0.3;
       opacity = 0.3;
-      x = distance > 0 ? 620 : -620;
+      x = distance > 0 ? offset3 : -offset3;
       zIndex = 20;
     } else {
       // Hidden
       scale = 0;
       opacity = 0;
-      x = distance > 0 ? 700 : -700;
+      x = distance > 0 ? offsetHidden : -offsetHidden;
       zIndex = 10;
     }
 
@@ -166,8 +180,8 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
           );
         })}
 
-        {/* Camera Brackets (like the Framer example) */}
-        <div className="absolute w-[640px] h-[440px] pointer-events-none z-[60] flex flex-col justify-between">
+        {/* Camera Brackets (like the Framer example) - Hide on mobile to save space */}
+        <div className="absolute w-[90%] md:w-[640px] h-[300px] md:h-[440px] pointer-events-none z-[60] hidden md:flex flex-col justify-between">
           <div className="flex justify-between w-full h-10">
             <div className="w-8 h-full border-t-2 border-l-2 border-white/50" />
             <div className="w-8 h-full border-t-2 border-r-2 border-white/50" />

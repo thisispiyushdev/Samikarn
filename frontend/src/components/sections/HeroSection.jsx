@@ -87,7 +87,7 @@ const HeroSection = () => {
         </div>
         
         {/* Original Typography */}
-        <h1 className="hero-element text-6xl md:text-7xl font-black leading-tight mb-8 text-white drop-shadow-2xl tracking-tighter">
+        <h1 className="hero-element text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter">
           Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400 drop-shadow-md">Samikaran</span>
         </h1>
 
