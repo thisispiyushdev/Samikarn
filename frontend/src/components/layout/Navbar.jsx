@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Menu, X, Heart } from 'lucide-react';
 import { toggleMobileMenu, closeMobileMenu } from '../../store/slices/uiSlice';
 
-import logo from '../../assets/media/1.png.png';
+import logo from '../../assets/media/logo.webp';
 
 import { motion } from 'framer-motion';
 

@@ -72,7 +72,7 @@ const Donate = () => {
                 currency: orderData.order.currency,
                 name: "Samikaran NGO",
                 description: "Donation for a Cause",
-                image: "/logo.png", // Using the logo from public folder
+                image: "/logo.webp", // Using the logo from public folder
                 order_id: orderData.order.id,
                 handler: async function (response) {
                     // 3. Verify Payment

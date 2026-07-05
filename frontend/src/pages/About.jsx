@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Target, Globe, ShieldCheck, Users, ArrowRight, BookOpen, Briefcase, Activity, Flag, Sunrise, Zap, Compass, Star, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import storyImg1 from '../assets/media/about_story1.webp';
+import storyImg2 from '../assets/media/about_story2.webp';
 
 const faqs = [
   { q: "What is Samikaran?", a: "Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth, especially from underserved communities." },
@@ -74,7 +76,7 @@ const About = () => {
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://i.ibb.co/qXrvb6v/IMG-8797.jpg" 
+            src={storyImg1} 
             alt="Samikaran Team" 
             className="w-full h-full object-cover"
           />
@@ -108,7 +110,7 @@ const About = () => {
           >
             <div className="absolute -inset-4 bg-secondary/20 rounded-2xl transform rotate-3"></div>
             <img 
-              src="https://i.ibb.co/jPkyZtvC/Untitled-design.png" 
+              src={storyImg2} 
               alt="Community work" 
               className="relative rounded-xl shadow-xl w-full h-auto object-cover"
             />

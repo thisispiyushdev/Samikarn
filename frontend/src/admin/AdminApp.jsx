@@ -43,7 +43,7 @@ import {
   LayoutTemplate
 } from 'lucide-react';
 import { convertDriveLinkToDirect } from '../utils/googleDriveParser';
-import logo from '../assets/media/1.png.png';
+import logo from '../assets/media/logo.webp';
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 

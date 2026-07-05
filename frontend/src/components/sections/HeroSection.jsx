@@ -7,7 +7,8 @@ import { Heart } from 'lucide-react';
 const HeroSection = () => {
   const [currentHeroIdx, setCurrentHeroIdx] = useState(0);
   
-  const hardcodedImage = "https://i.ibb.co/KHtZ7g2/image-2026-07-05-170637002.png";
+  import heroBg from '../../assets/media/hero_bg.webp';
+  const hardcodedImage = heroBg;
   const [heroImages, setHeroImages] = useState([hardcodedImage]);
 
   useEffect(() => {

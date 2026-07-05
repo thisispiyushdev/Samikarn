@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Calendar, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import aboutImage from '../assets/media/about_image.png';
+import aboutImage from '../assets/media/about_image.webp';
 
 // Import extracted components
 import HeroSection from '../components/sections/HeroSection';
