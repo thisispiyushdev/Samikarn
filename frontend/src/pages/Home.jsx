@@ -13,6 +13,8 @@ import Testimonials from '../components/sections/Testimonials';
 import DepthBlurCarousel from '../components/sections/DepthBlurCarousel';
 import Snap3DCarousel from '../components/sections/Snap3DCarousel';
 
+import { cachedFetch } from '../utils/cachedFetch';
+
 const Home = () => {
   const [galleryItems, setGalleryItems] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -26,13 +28,13 @@ const Home = () => {
   const [currentMomentsSlide, setCurrentMomentsSlide] = useState(0);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/gallery`)
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setGalleryItems(data.gallery);
       });
     
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
       .then(r => r.json())
       .then(data => {
         if (data.success && data.settings.impactStats) {
@@ -40,7 +42,7 @@ const Home = () => {
         }
       });
 
-    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects`)
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setLiveProjects(data.projects);
