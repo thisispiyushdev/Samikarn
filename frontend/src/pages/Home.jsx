@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Calendar, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import aboutImage from '../assets/media/about_image.png';
+
 
 // Import extracted components
 import HeroSection from '../components/sections/HeroSection';
@@ -85,7 +85,7 @@ const Home = () => {
               <div className="relative">
                   <div className="w-full h-[500px] bg-gray-100 rounded-xl overflow-hidden relative shadow-2xl">
                       <img 
-                        src={aboutImage} 
+                        src="https://i.ibb.co/jPkyZtvC/Untitled-design.png" 
                         alt="About Samikaran" 
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
                       />
