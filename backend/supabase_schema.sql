@@ -140,3 +140,14 @@ CREATE TABLE IF NOT EXISTS public.testimonials (
 );
 
 ALTER TABLE public.testimonials DISABLE ROW LEVEL SECURITY;
+
+CREATE TABLE IF NOT EXISTS public.causes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  amount NUMERIC NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.causes DISABLE ROW LEVEL SECURITY;

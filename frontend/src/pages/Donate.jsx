@@ -9,11 +9,18 @@ const Donate = () => {
     const [donorEmail, setDonorEmail] = React.useState('');
     const [donorContact, setDonorContact] = React.useState('');
 
-    const programs = [
-        { id: 'education', title: 'Sponsor a Child Education', desc: 'Provide books, uniform, and tuition for a year.', amount: 12000 },
-        { id: 'health', title: 'Medical Camp Support', desc: 'Medicine and equipment for rural village camps.', amount: 5000 },
-        { id: 'environment', title: 'Plant 100 Trees', desc: 'Contribution towards green cover initiatives.', amount: 2500 },
-    ];
+    const [programs, setPrograms] = React.useState([]);
+
+    React.useEffect(() => {
+        fetch('/api/causes')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setPrograms(data.causes.filter(c => c.is_active));
+                }
+            })
+            .catch(err => console.error("Error fetching causes:", err));
+    }, []);
 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
@@ -140,13 +147,13 @@ const Donate = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">2. Choose a Cause</h2>
             <div className="grid md:grid-cols-3 gap-6 mb-8">
                 {programs.map(prog => (
-                    <div key={prog.id} onClick={() => handlePayment(prog.amount)} className="border-2 border-transparent hover:border-primary bg-gray-50 p-6 rounded-xl cursor-pointer transition-all hover:bg-primary/10 group text-center">
+                    <div key={prog.id} onClick={() => handlePayment(prog.amount)} className="border-2 border-transparent hover:border-primary bg-gray-50 p-6 rounded-xl cursor-pointer transition-all hover:bg-primary/10 group text-center flex flex-col h-full">
                         <div className="w-12 h-12 mx-auto bg-white rounded-full flex items-center justify-center shadow-sm text-primary mb-4 group-hover:scale-110 transition-transform">
                             <Gift size={24} />
                         </div>
                         <h3 className="font-bold text-gray-900 mb-2">{prog.title}</h3>
-                        <p className="text-sm text-gray-500 mb-4">{prog.desc}</p>
-                        <div className="text-lg font-bold text-primary">₹{prog.amount.toLocaleString()}</div>
+                        <p className="text-sm text-gray-500 mb-4 flex-1">{prog.description}</p>
+                        <div className="text-lg font-bold text-primary mt-auto">₹{Number(prog.amount).toLocaleString()}</div>
                     </div>
                 ))}
             </div>

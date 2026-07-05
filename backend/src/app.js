@@ -14,6 +14,7 @@ import subscriberRoutes from './routes/subscriberRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
 import testimonialRoutes from './routes/testimonialRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
+import causeRoutes from './routes/causeRoutes.js';
 const app = express();
 
 // Trust the proxy (Render, Vercel, etc) for express-rate-limit
@@ -72,6 +73,7 @@ const mountRoutes = (prefix = '') => {
   app.use(`${prefix}/reports`, reportRoutes);
   app.use(`${prefix}/announcements`, announcementRoutes);
   app.use(`${prefix}/testimonials`, testimonialRoutes);
+  app.use(`${prefix}/causes`, causeRoutes);
 };
 
 mountRoutes('/api');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, ArrowRight, Calendar, ExternalLink, X, MapPin, CheckCircle, Heart, Megaphone, TrendingUp, Users, BookOpen, FolderHeart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { FileText, ArrowRight, Calendar, ExternalLink, X, MapPin, CheckCircle, Heart, Megaphone, TrendingUp, Users, BookOpen } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BentoCard = ({ children, className, delay = 0, onClick, hoverable = true }) => (
   <motion.div
@@ -17,7 +17,7 @@ const BentoCard = ({ children, className, delay = 0, onClick, hoverable = true }
 );
 
 const Impact = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate();
   const [liveProjects, setLiveProjects] = useState([]);
   const [liveReports, setLiveReports] = useState([]);
   const [liveAnnouncements, setLiveAnnouncements] = useState([]);
@@ -183,186 +183,82 @@ const Impact = () => {
               </div>
           </div>
       </section>
-
-      {/* Live Projects Section */}
+{/* Active Mission & Projects */}
       {liveProjects.length > 0 && (
-        <section className="py-24 bg-white relative">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="mb-16">
-              <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Live Updates</h2>
-              <h3 className="text-4xl font-bold text-gray-900">Active Projects</h3>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {liveProjects.map((project, i) => (
-                <BentoCard 
-                  key={project.id || project._id || i} 
-                  delay={i * 0.1}
-                  onClick={() => setSelectedItem(project)}
-                  className="p-0!"
-                >
-                  <div className="h-48 bg-gray-100 relative overflow-hidden rounded-t-xl">
-                    {project.image || project.media ? (
-                      <img src={project.image || project.media} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300">
-                        <FolderHeart size={40} />
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase text-gray-900 tracking-widest">
-                      {project.status || 'Active'}
-                    </div>
+          <section className="py-24 bg-white">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                  <div className="text-center mb-16">
+                      <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Our Work</h2>
+                      <h3 className="text-4xl font-bold mb-6">Active Mission & Projects</h3>
                   </div>
-                  <div className="p-8">
-                    <h3 className="text-xl font-black text-gray-900 mb-3">{project.title}</h3>
-                    <p className="text-gray-500 font-bold text-sm line-clamp-3">{project.description}</p>
-                  </div>
-                </BentoCard>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Reports Section */}
-      {liveReports.length > 0 && (
-        <section className="py-24 bg-gray-50 relative border-t border-gray-100">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="mb-16">
-              <h2 className="text-sm font-bold text-secondary uppercase tracking-widest mb-2">Publications</h2>
-              <h3 className="text-4xl font-bold text-gray-900">Impact Reports</h3>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {liveReports.map((report, i) => (
-                <BentoCard 
-                  key={report.id || report._id || i} 
-                  delay={i * 0.1}
-                  onClick={() => setSelectedItem(report)}
-                  className="p-0!"
-                >
-                  <div className="h-48 bg-gray-100 relative overflow-hidden rounded-t-xl">
-                    {report.image || report.media ? (
-                      <img src={report.image || report.media} alt={report.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300">
-                        <FileText size={40} />
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase text-gray-900 tracking-widest">
-                      Report
-                    </div>
-                  </div>
-                  <div className="p-8">
-                    <h3 className="text-xl font-black text-gray-900 mb-3">{report.title}</h3>
-                    <p className="text-gray-500 font-bold text-sm line-clamp-3">{report.description}</p>
-                  </div>
-                </BentoCard>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-      <AnimatePresence>
-        {selectedItem && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={() => setSelectedItem(null)}
-          >
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 50 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-white rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button 
-                onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white p-2 rounded-full transition-colors"
-              >
-                <X size={24} />
-              </button>
-
-              <div className="relative h-64 md:h-80">
-                <img 
-                    src={getImg(selectedItem)} 
-                    alt={selectedItem.title} 
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-6 left-6 md:left-8 text-white">
-                    <div className="flex items-center gap-3 mb-2">
-                        <span className="bg-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{selectedItem.status || (selectedItem._type === 'report' ? 'Published' : 'Active')}</span>
-                        {selectedItem.location && (
-                             <span className="flex items-center gap-1 text-sm bg-black/30 px-2 py-0.5 rounded-full backdrop-blur-sm"><MapPin size={14} /> {selectedItem.location}</span>
-                        )}
-                    </div>
-                    <h2 className="text-3xl md:text-5xl font-bold mb-1">{selectedItem.title}</h2>
-                    <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
-                        <Calendar size={14} /> {selectedItem.date || new Date(selectedItem.createdAt || Date.now()).toLocaleDateString()}
-                    </div>
-                </div>
-              </div>
-
-              <div className="p-8 md:p-10">
-                <div className="grid md:grid-cols-3 gap-8">
-                    {/* Content */}
-                    <div className="md:col-span-2">
-                        <div className="prose prose-lg text-gray-600 prose-headings:text-gray-900 prose-p:text-gray-600 prose-li:text-gray-600 whitespace-pre-wrap font-medium">
-                            {selectedItem.fullContent ? (
-                                <div dangerouslySetInnerHTML={{ __html: selectedItem.fullContent }} />
-                            ) : (
-                                <p>{selectedItem.description}</p>
-                            )}
-                        </div>
-                    </div>
-                    
-                    {/* Sidebar Stats */}
-                    <div className="space-y-6">
-                        {selectedItem.stats && selectedItem.stats.length > 0 && (
-                          <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 shadow-sm">
-                              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><CheckCircle className="text-primary" size={20} /> Impact Stats</h3>
-                              <div className="space-y-4">
-                                  {selectedItem.stats.map((stat, i) => (
-                                      <div key={i} className="border-b border-gray-200 last:border-0 pb-3 last:pb-0">
-                                          <div className="text-3xl font-black text-gray-900">{stat.value}</div>
-                                          <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">{stat.label}</div>
-                                      </div>
-                                  ))}
+                  <div className="grid md:grid-cols-3 gap-8">
+                      {liveProjects.map(project => (
+                          <div 
+                              key={project._id || project.id} 
+                              onClick={() => navigate(`/projects/${project._id || project.id}`)}
+                              className="flex flex-col gap-4 group cursor-pointer"
+                          >
+                              <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
+                                  <img src={getImg(project)} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                              </div>
+                              <div className="flex items-start justify-between">
+                                  <div>
+                                      <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors">{project.title}</h4>
+                                      <p className="text-gray-500 mt-1 line-clamp-2">{project.description}</p>
+                                  </div>
+                                  <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
+                                      {project.date || new Date(project.createdAt || Date.now()).getFullYear()}
+                                  </div>
                               </div>
                           </div>
-                        )}
-                        
-                        {(selectedItem.pdfLink || selectedItem.pdfUrl || selectedItem.fileUrl || selectedItem.pdf) && (
-                            <a 
-                                href={selectedItem.pdfLink || selectedItem.pdfUrl || selectedItem.fileUrl || selectedItem.pdf} 
-                                target="_blank" 
-                                rel="noreferrer"
-                                className="w-full bg-secondary text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg hover:bg-secondary/90 transition-all flex items-center justify-center gap-2 mb-6"
-                            >
-                                <FileText size={18} fill="currentColor" /> Download PDF
-                            </a>
-                        )}
-                        <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-8 border border-primary/20 text-center shadow-sm">
-                            <p className="text-gray-900 font-bold mb-4">Inspired by this?</p>
-                            <Link 
-                                to={`/donate`} 
-                                className="w-full bg-primary text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-                            >
-                                <Heart size={18} fill="currentColor" /> Donate Now
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+                      ))}
+                  </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </section>
+      )}
+
+      {/* Publications & Reports */}
+      {liveReports.length > 0 && (
+          <section className="py-24 bg-gray-50 border-t border-gray-100">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                  <div className="text-center mb-16">
+                      <h2 className="text-sm font-bold text-secondary uppercase tracking-widest mb-2">Resources</h2>
+                      <h3 className="text-4xl font-bold mb-6">Publications & Reports</h3>
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-8">
+                      {liveReports.map(report => (
+                          <div 
+                              key={report._id || report.id} 
+                              onClick={() => navigate(`/reports/${report._id || report.id}`)}
+                              className="flex flex-col gap-4 group cursor-pointer"
+                          >
+                              <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                                  {report.image || report.url ? (
+                                      <img src={getImg(report)} alt={report.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                  ) : (
+                                      <div className="w-full h-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                                          <FileText size={48} className="text-secondary opacity-50 group-hover:scale-110 transition-transform duration-500" />
+                                      </div>
+                                  )}
+                              </div>
+                              <div className="flex items-start justify-between">
+                                  <div>
+                                      <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors">{report.title}</h4>
+                                      <p className="text-gray-500 mt-1 line-clamp-2">{report.description}</p>
+                                  </div>
+                                  <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
+                                      {report.date || new Date(report.createdAt || Date.now()).getFullYear()}
+                                  </div>
+                              </div>
+                          </div>
+                      ))}
+                  </div>
+              </div>
+          </section>
+      )}
+
+
 
     </div>
   );

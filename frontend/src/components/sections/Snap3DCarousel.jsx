@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar } from 'lucide-react';
@@ -128,7 +129,7 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
             return (
               <motion.div
                 key={item._id || index}
-                className="absolute cursor-pointer rounded-sm overflow-hidden shadow-2xl"
+                className="absolute cursor-pointer rounded-sm overflow-hidden shadow-2xl group"
               initial={false}
               animate={{
                 scale,
