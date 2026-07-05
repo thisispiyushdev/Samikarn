@@ -12,7 +12,7 @@ const ProjectDetail = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        fetch(`/api/projects/${id}`)
+        fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/projects/${id}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {

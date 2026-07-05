@@ -12,7 +12,7 @@ const Donate = () => {
     const [programs, setPrograms] = React.useState([]);
 
     React.useEffect(() => {
-        fetch('/api/causes')
+        fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/causes`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
