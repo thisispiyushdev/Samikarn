@@ -16,6 +16,8 @@ import testimonialRoutes from './routes/testimonialRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
 const app = express();
 
+// Trust the proxy (Render, Vercel, etc) for express-rate-limit
+app.set('trust proxy', 1);
 // Security Middlewares
 app.use(helmet({
   contentSecurityPolicy: {
