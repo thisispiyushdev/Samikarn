@@ -156,21 +156,6 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
                 className="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-105"
               />
 
-              {/* View details overlay only on active card */}
-              <AnimatePresence>
-                {isActive && (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
-                  >
-                    <div className="bg-white text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 uppercase tracking-widest text-sm">
-                      View <ArrowRight size={16} />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           );
         })}
