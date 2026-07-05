@@ -59,12 +59,11 @@ const VelocityCarousel = ({ items = [], onImageClick }) => {
                 onMouseEnter={() => setHoveredIndex(idx)}
                 className={`relative flex-shrink-0 cursor-pointer overflow-hidden rounded-3xl transition-all duration-500 ease-out`}
                 style={{
-                  width: isCardHovered ? '700px' : '480px',
-                  height: isCardHovered ? '380px' : '300px',
+                  width: '650px',
+                  height: '420px',
                   opacity: isAnyHovered && !isCardHovered ? 0.4 : 1,
                   filter: isAnyHovered && !isCardHovered ? 'blur(2px) grayscale(50%)' : 'blur(0px) grayscale(0%)',
-                  zIndex: isCardHovered ? 20 : 10,
-                  transform: isCardHovered ? 'scale(1.05)' : 'scale(1)'
+                  zIndex: isCardHovered ? 20 : 10
                 }}
                 onClick={() => onImageClick && onImageClick(item, idx % items.length)}
               >
