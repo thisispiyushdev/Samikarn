@@ -832,7 +832,7 @@ const Projects = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.projects);
     } catch (err) {
-      showToast(`Failed to load projects', 'error');
+      showToast('Failed to load projects', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -847,7 +847,7 @@ const Projects = ({ showToast }) => {
     setLoading(true);
     try {
       const url = editingId ? `${apiBase}/api/projects/${editingId}` : `${apiBase}/api/projects`;
-      const method = editingId ? `PUT' : 'POST';
+      const method = editingId ? 'PUT' : 'POST';
       
       const res = await fetch(url, {
         method,
@@ -1107,7 +1107,7 @@ const Reports = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.reports);
     } catch (err) {
-      showToast(`Failed to load reports', 'error');
+      showToast('Failed to load reports', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1122,7 +1122,7 @@ const Reports = ({ showToast }) => {
     setLoading(true);
     try {
       const url = editingId ? `${apiBase}/api/reports/${editingId}` : `${apiBase}/api/reports`;
-      const method = editingId ? `PUT' : 'POST';
+      const method = editingId ? 'PUT' : 'POST';
       
       const res = await fetch(url, {
         method,
@@ -1307,7 +1307,7 @@ const Announcements = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.announcements);
     } catch (err) {
-      showToast(`Failed to load announcements', 'error');
+      showToast('Failed to load announcements', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1322,7 +1322,7 @@ const Announcements = ({ showToast }) => {
     setLoading(true);
     try {
       const url = editingId ? `${apiBase}/api/announcements/${editingId}` : `${apiBase}/api/announcements`;
-      const method = editingId ? `PUT' : 'POST';
+      const method = editingId ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method, headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify(form)
       });
@@ -1437,7 +1437,7 @@ const Subscribers = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.subscribers);
     } catch (err) {
-      showToast(`Failed to load audience repository', 'error');
+      showToast('Failed to load audience repository', 'error');
     } finally {
       setLoading(false);
     }
@@ -1578,7 +1578,7 @@ const Settings = ({ showToast }) => {
       const dataSettings = await resSettings.json();
       if (dataSettings.success) setSite(dataSettings.settings);
     } catch (err) {
-      showToast(`Failed to sync global registry', 'error');
+      showToast('Failed to sync global registry', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1742,7 +1742,7 @@ const CarouselManager = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.media);
     } catch (err) {
-      showToast(`Failed to load media archive', 'error');
+      showToast('Failed to load media archive', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1757,7 +1757,7 @@ const CarouselManager = ({ showToast }) => {
     try {
       const payload = { ...form, gallery: [] };
       const url = editingId ? `${apiBase}/api/media/${editingId}` : `${apiBase}/api/media`;
-      const method = editingId ? `PUT' : 'POST';
+      const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
@@ -1930,7 +1930,7 @@ const TestimonialsAdmin = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.testimonials);
     } catch (err) {
-      showToast(`Failed to load testimonials', 'error');
+      showToast('Failed to load testimonials', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1945,7 +1945,7 @@ const TestimonialsAdmin = ({ showToast }) => {
     setLoading(true);
     try {
       const url = editingId ? `${apiBase}/api/testimonials/${editingId}` : `${apiBase}/api/testimonials`;
-      const method = editingId ? `PUT' : 'POST';
+      const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
