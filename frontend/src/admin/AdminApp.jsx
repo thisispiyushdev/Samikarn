@@ -978,7 +978,7 @@ const Projects = ({ showToast }) => {
                             const file = e.target.files[0];
                             if (file) {
                                 
-                                compressAndConvertToBase64(file).then(base64 => { setForm({...form, image:base64}) }).catch(err => console.error('Compression failed', err));
+                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})) }).catch(err => console.error('Compression failed', err));
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1271,7 +1271,7 @@ const Reports = ({ showToast }) => {
                             const file = e.target.files[0];
                             if (file) {
                                 
-                                compressAndConvertToBase64(file).then(base64 => { setForm({...form, media:base64}) }).catch(err => console.error('Compression failed', err));
+                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})) }).catch(err => console.error('Compression failed', err));
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1428,7 +1428,7 @@ const Announcements = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                               
-                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, media:base64}) }).catch(err => console.error('Compression failed', err));
+                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1899,7 +1899,7 @@ const GalleryAdmin = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                               
-                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, image:base64}) }).catch(err => console.error('Compression failed', err));
+                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
@@ -2093,7 +2093,7 @@ const CarouselManager = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                                // 2MB limit
-                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, mainImage:base64, url: base64}) }).catch(err => console.error('Compression failed', err));
+                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, mainImage:base64, url: base64})) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
@@ -2315,7 +2315,7 @@ const TestimonialsAdmin = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                                // 2MB limit
-                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, avatar:base64}) }).catch(err => console.error('Compression failed', err));
+                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, avatar:base64})) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"

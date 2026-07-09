@@ -69,7 +69,7 @@ const Home = () => {
     setCurrentImgIdx((prev) => (prev - 1 + total) % total);
   };
 
-  const allImages = selectedEvent ? [selectedEvent.mainImage, ...(selectedEvent.gallery || [])] : [];
+  const allImages = selectedEvent ? [selectedEvent.mainImage || selectedEvent.image, ...(selectedEvent.gallery || [])].filter(Boolean) : [];
 
   return (
     <div className="bg-white">
