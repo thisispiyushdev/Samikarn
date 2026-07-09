@@ -16,7 +16,11 @@ export const compressAndConvertToBase64 = async (file, options = {}) => {
   };
 
   try {
-    const compressedFile = await imageCompression(file, defaultOptions);
+    let compressedFile = file;
+    // Only compress standard raster images
+    if (['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      compressedFile = await imageCompression(file, defaultOptions);
+    }
     
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -26,6 +30,12 @@ export const compressAndConvertToBase64 = async (file, options = {}) => {
     });
   } catch (error) {
     console.error('Error during image compression:', error);
-    throw error;
+    // Fallback: if compression fails for any reason, try converting the original file directly
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = (e) => reject(e);
+    });
   }
 };
