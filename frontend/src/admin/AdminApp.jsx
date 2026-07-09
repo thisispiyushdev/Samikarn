@@ -977,10 +977,8 @@ const Projects = ({ showToast }) => {
                         onChange={(e) => {
                             const file = e.target.files[0];
                             if (file) {
-                                if (file.size > 61440) return showToast('Image cannot exceed 60KB', 'error');
-                                const reader = new FileReader();
-                                reader.onloadend = () => setForm({...form, image: reader.result});
-                                reader.readAsDataURL(file);
+                                
+                                compressAndConvertToBase64(file).then(base64 => { setForm({...form, image:base64}) }).catch(err => console.error('Compression failed', err));
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1000,15 +998,8 @@ const Projects = ({ showToast }) => {
                             
                             const newGallery = [...form.gallery];
                             files.forEach(file => {
-                                if (file.size > 61440) {
-                                    showToast(`${file.name} exceeds 60KB`, 'error');
-                                    return;
-                                }
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                    setForm(prev => ({...prev, gallery: [...prev.gallery, reader.result]}));
-                                };
-                                reader.readAsDataURL(file);
+                                
+                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, gallery: [...prev.gallery,base64]})); }).catch(err => console.error('Compression failed', err));
                             });
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1279,10 +1270,8 @@ const Reports = ({ showToast }) => {
                         onChange={(e) => {
                             const file = e.target.files[0];
                             if (file) {
-                                if (file.size > 61440) return showToast('Image cannot exceed 60KB', 'error');
-                                const reader = new FileReader();
-                                reader.onloadend = () => setForm({...form, media: reader.result});
-                                reader.readAsDataURL(file);
+                                
+                                compressAndConvertToBase64(file).then(base64 => { setForm({...form, media:base64}) }).catch(err => console.error('Compression failed', err));
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1438,10 +1427,8 @@ const Announcements = ({ showToast }) => {
                       onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) {
-                              if (file.size > 61440) return showToast('Image cannot exceed 60KB', 'error');
-                              const reader = new FileReader();
-                              reader.onloadend = () => setForm({...form, media: reader.result});
-                              reader.readAsDataURL(file);
+                              
+                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, media:base64}) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1911,10 +1898,8 @@ const GalleryAdmin = ({ showToast }) => {
                       onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) {
-                              if (file.size > 2000000) return showToast('Image too large', 'error');
-                              const reader = new FileReader();
-                              reader.onloadend = () => setForm({...form, image: reader.result});
-                              reader.readAsDataURL(file);
+                              
+                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, image:base64}) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
@@ -2107,10 +2092,8 @@ const CarouselManager = ({ showToast }) => {
                       onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) {
-                              if (file.size > 2000000) return showToast('Image too large', 'error'); // 2MB limit
-                              const reader = new FileReader();
-                              reader.onloadend = () => setForm({...form, mainImage: reader.result, url: reader.result});
-                              reader.readAsDataURL(file);
+                               // 2MB limit
+                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, mainImage:base64, url: base64}) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
@@ -2331,10 +2314,8 @@ const TestimonialsAdmin = ({ showToast }) => {
                       onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) {
-                              if (file.size > 2000000) return showToast('Image too large', 'error'); // 2MB limit
-                              const reader = new FileReader();
-                              reader.onloadend = () => setForm({...form, avatar: reader.result});
-                              reader.readAsDataURL(file);
+                               // 2MB limit
+                              compressAndConvertToBase64(file).then(base64 => { setForm({...form, avatar:base64}) }).catch(err => console.error('Compression failed', err));
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
