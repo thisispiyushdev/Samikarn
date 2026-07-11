@@ -215,7 +215,7 @@ const Media = () => {
                       <p className="text-gray-500 mt-1 line-clamp-2">{item.description}</p>
                     </div>
                     <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
-                      {new Date(item.date).getFullYear()}
+                      {(new Date(item.date).getFullYear() || new Date().getFullYear())}
                     </div>
                   </div>
                 </motion.div>

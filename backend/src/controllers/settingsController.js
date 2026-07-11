@@ -7,6 +7,7 @@ export const getSettings = async (req, res) => {
       address: '123 NGO Street, Social Welfare Area, New Delhi, India', 
       phone: '+91 98765 43210', 
       email: 'contact@samikaran.org',
+      socials: { instagram: '', facebook: '', linkedin: '', youtube: '', twitter: '', whatsapp: '' },
       impact_stats: {
         studentsReached: '1650+',
         institutions: '14+',
@@ -30,6 +31,7 @@ export const updateSettings = async (req, res) => {
       address: '123 NGO Street, Social Welfare Area, New Delhi, India', 
       phone: '+91 98765 43210', 
       email: 'contact@samikaran.org',
+      socials: { instagram: '', facebook: '', linkedin: '', youtube: '', twitter: '', whatsapp: '' },
       impact_stats: {
         studentsReached: '1650+',
         institutions: '14+',
@@ -44,6 +46,7 @@ export const updateSettings = async (req, res) => {
     address: req.body.address ?? doc.address,
     phone: req.body.phone ?? doc.phone,
     email: req.body.email ?? doc.email,
+    socials: req.body.socials ?? doc.socials,
     impact_stats: req.body.impactStats ?? doc.impact_stats
   };
   

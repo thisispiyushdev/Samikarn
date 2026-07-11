@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar } from 'lucide-react';
 
-const Snap3DCarousel = ({ items = [], onImageClick }) => {
+const Snap3DCarousel = ({ items = [], onImageClick, isPaused = false }) => {
   const safeItems = items || [];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -11,22 +11,27 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    const handleResize = () => {
+      setWindowWidth((prev) => {
+        if (prev !== window.innerWidth) return window.innerWidth;
+        return prev;
+      });
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Auto-play logic
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isPaused) return;
     
     const interval = setInterval(() => {
       if (safeItems.length === 0) return;
       setActiveIndex((current) => (current + 1) % safeItems.length);
-    }, 4000); // Change slide every 2 seconds
+    }, 4000); // Change slide every 4 seconds
     
     return () => clearInterval(interval);
-  }, [safeItems.length, isHovered]);
+  }, [safeItems.length, isHovered, isPaused]);
 
   const handleNext = () => {
     if (safeItems.length === 0) return;
@@ -110,8 +115,6 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
   return (
     <div 
       className="relative w-full overflow-hidden bg-primary py-24 min-h-[90vh] flex flex-col justify-center items-center font-sans"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       
       {/* Static Section Header */}
@@ -125,7 +128,11 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
       </div>
 
       {/* 3D Snap Track Container */}
-      <div className="relative w-full max-w-[1200px] flex items-center justify-center mt-12">
+      <div 
+        className="relative w-full max-w-[1200px] flex items-center justify-center mt-12"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         
         {/* Left Button */}
         <button 
@@ -143,7 +150,7 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
             return (
               <motion.div
                 key={item._id || index}
-                className="absolute cursor-pointer rounded-sm overflow-hidden shadow-2xl group"
+                className="absolute cursor-pointer rounded-xl overflow-hidden shadow-2xl group"
               initial={false}
               animate={{
                 scale,
@@ -152,8 +159,10 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
                 zIndex
               }}
               transition={{
-                duration: 0.4,
-                ease: [0.25, 1, 0.5, 1] // Super smooth cubic bezier
+                type: "spring",
+                stiffness: 200,
+                damping: 25,
+                mass: 1
               }}
               style={{
                 width: `${width}px`,
@@ -170,9 +179,11 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
               }}
             >
               {/* Image */}
-              <img 
+              <motion.img 
+                layoutId={`carousel-img-${item._id || index}`}
                 src={item.mainImage || item.url || item.image || item.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1920&auto=format&fit=crop'} 
                 alt={item.title || 'Playbook Moment'} 
+                style={{ borderRadius: 16 }}
                 className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
               />
 
@@ -212,7 +223,7 @@ const Snap3DCarousel = ({ items = [], onImageClick }) => {
         >
           {activeItem?.date && (
             <div className="text-white/50 font-medium tracking-[0.2em] text-xs mb-2">
-               {new Date(activeItem.date).getFullYear()}
+               {(new Date(activeItem.date).getFullYear() || new Date().getFullYear())}
             </div>
           )}
           <div className="text-white/80 font-bold uppercase tracking-[0.1em] text-xs max-w-lg mx-auto line-clamp-2">

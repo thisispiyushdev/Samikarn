@@ -209,9 +209,9 @@ const Toast = ({ message, type = 'success', onClose }) => {
   }, [onClose]);
 
   const icons = {
-    success: <CheckCircle2 className="text-emerald-500" size={20} />,
-    error: <AlertCircle className="text-red-500" size={20} />,
-    info: <Bell className="text-blue-500" size={20} />
+    success: <CheckCircle2 className="text-emerald-400" size={20} />,
+    error: <AlertCircle className="text-red-400" size={20} />,
+    info: <Bell className="text-blue-400" size={20} />
   };
 
   return (
@@ -219,20 +219,22 @@ const Toast = ({ message, type = 'success', onClose }) => {
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      className="fixed bottom-10 right-10 z-[100] flex items-center gap-4 bg-white border border-gray-100 p-6 rounded-xl shadow-[0_20px_50px_rgb(0,0,0,0.1)] min-w-[320px]"
+      className="fixed bottom-10 right-10 z-[100] flex items-center gap-4 bg-gray-900 border border-gray-800 p-4 rounded-2xl shadow-2xl min-w-[320px] max-w-[400px] backdrop-blur-xl bg-opacity-95"
     >
       <div className={cn(
-        "w-12 h-12 rounded-xl flex items-center justify-center",
-        type === 'success' ? 'bg-emerald-50' : type === 'error' ? 'bg-red-50' : 'bg-blue-50'
+        "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+        type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20' : 
+        type === 'error' ? 'bg-red-500/10 border border-red-500/20' : 
+        'bg-blue-500/10 border border-blue-500/20'
       )}>
         {icons[type]}
       </div>
-      <div className="flex-1">
-        <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{type === 'error' ? 'Alert' : 'Notification'}</h4>
-        <p className="text-sm font-semibold text-gray-900 tracking-tight mt-1">{message}</p>
+      <div className="flex-1 pr-4">
+        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">{type === 'error' ? 'System Alert' : 'System Notice'}</h4>
+        <p className="text-sm font-medium text-gray-100 tracking-wide leading-snug">{message}</p>
       </div>
-      <button onClick={onClose} className="text-gray-300 hover:text-gray-900 transition-colors">
-        <Plus className="rotate-45" size={20} />
+      <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-colors shrink-0">
+        <X size={16} />
       </button>
     </motion.div>
   );
@@ -512,7 +514,7 @@ const AdminLayout = ({ onLogout, showToast }) => {
       {/* Mobile Header */}
       <div className="md:hidden shrink-0 bg-white border-b border-gray-200 z-40 px-6 py-3 flex items-center justify-between shadow-sm">
         <Link to="/admin" className="flex items-center h-10 overflow-hidden">
-          <img src={logo} alt="Samikaran Logo" className="h-28 w-auto object-contain -my-8" />
+          <img src={logo} alt="Samikaran Logo" className="h-48 mt-2 w-auto object-contain -my-2" />
         </Link>
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -534,7 +536,7 @@ const AdminLayout = ({ onLogout, showToast }) => {
         isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         <Link to="/admin" className="px-2 mb-6 block flex items-center h-20 overflow-hidden">
-          <img src={logo} alt="Samikaran Logo" className="h-44 w-auto object-contain -my-12 drop-shadow-sm transition-transform duration-300 hover:scale-105" />
+          <img src={logo} alt="Samikaran Logo" className="h-78 w-auto object-contain -my-20 drop-shadow-sm transition-transform duration-300 hover:scale-105" />
         </Link>
         
         <div className="relative mb-6 px-1">
@@ -692,7 +694,7 @@ const Dashboard = ({ showToast }) => {
         
         setRecentActivity(activities.sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5));
       } catch (err) {
-        showToast('Failed to sync dashboard telemetry', 'error');
+        showToast('Failed to load dashboard data', 'error');
       }
     };
     fetchDashboardData();
@@ -724,7 +726,7 @@ const Dashboard = ({ showToast }) => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SpotlightCard title="Mission Repository" subtitle="Recent global operations" delay={0.3}>
+        <SpotlightCard title="Recent Activity" subtitle="Latest additions" delay={0.3}>
           <div className="space-y-8">
             {recentActivity.length > 0 ? recentActivity.map((act, i) => (
               <div key={i} className="flex items-center justify-between group cursor-default">
@@ -742,7 +744,7 @@ const Dashboard = ({ showToast }) => {
                 </span>
               </div>
             )) : (
-              <div className="py-10 text-center text-gray-300 font-semibold uppercase tracking-widest text-xs">No recent telemetry</div>
+              <div className="py-10 text-center text-gray-300 font-semibold uppercase tracking-widest text-xs">No recent activity</div>
             )}
             
             <Link to="/admin/projects" className="flex items-center justify-center gap-2 py-4 mt-4 rounded-xl border border-dashed border-gray-200 text-gray-500 font-medium text-sm hover:border-gray-900 hover:text-gray-900 transition-all">
@@ -858,7 +860,7 @@ const Projects = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) { 
-        showToast(editingId ? 'Mission updated successfully' : 'New mission deployed');
+        showToast(editingId ? 'Project updated successfully' : 'New project added');
         setForm({ title:'', description:'', image:'', status:'Active', gallery: [] }); 
         setEditingId(null);
         load(); 
@@ -900,7 +902,7 @@ const Projects = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Mission record purged');
+        showToast('Project deleted');
         setConfirmDelete({ open: false, id: null });
         load();
       }
@@ -915,17 +917,17 @@ const Projects = ({ showToast }) => {
     <div className="space-y-12">
       <ConfirmModal 
         isOpen={confirmDelete.open} 
-        title="Purge Record?" 
-        message="This will permanently delete the mission record and all associated metadata. This action is irreversible." 
+        title="Delete Item?" 
+        message="This will permanently delete the project record and all associated data. This action is irreversible." 
         onConfirm={remove} 
         onCancel={() => setConfirmDelete({ open: false, id: null })} 
         loading={loading}
       />
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-gray-100">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Mission Repository</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Archive Records</p>
+          <h2 className="text-2xl font-bold text-gray-900">Projects</h2>
+          <p className="text-gray-500 font-medium text-sm mt-1">Manage project records</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <div className="relative group flex-1 md:flex-none">
@@ -942,7 +944,7 @@ const Projects = ({ showToast }) => {
             variant={isFormOpen ? "danger" : "primary"}
             className={cn("transition-all rounded-full px-8 py-4", isFormOpen && "transform -rotate-[15deg] bg-red-50 text-red-500 border border-red-100 shadow-none hover:bg-red-100")}
           >
-            {isFormOpen ? <X size={20} /> : "Initiate Mission"}
+            {isFormOpen ? <X size={20} /> : "Add Project"}
           </ShinyButton>
         </div>
       </div>
@@ -1217,7 +1219,7 @@ const Reports = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Report record purged');
+        showToast('Report deleted');
         setConfirmDelete({ open: false, id: null });
         load();
       }
@@ -1254,7 +1256,7 @@ const Reports = ({ showToast }) => {
             />
           </div>
           <ShinyButton onClick={() => setIsFormOpen(!isFormOpen)} variant={isFormOpen ? "danger" : "primary"} className={cn("transition-all rounded-full px-8 py-4", isFormOpen && "transform -rotate-[15deg] bg-red-50 text-red-500 border border-red-100 shadow-none hover:bg-red-100")}>
-            {isFormOpen ? <X size={20} /> : "Publish New"}
+            {isFormOpen ? <X size={20} /> : "Add Report"}
           </ShinyButton>
         </div>
       </div>
@@ -1386,7 +1388,7 @@ const Announcements = ({ showToast }) => {
     try {
       const res = await fetch(`${apiBase}/api/announcements/${confirmDelete.id}`, { method:'DELETE', headers:{ Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      if (data.success) { showToast('Purged.'); setConfirmDelete({ open: false, id: null }); load(); }
+      if (data.success) { showToast('Announcement deleted'); setConfirmDelete({ open: false, id: null }); load(); }
     } catch (err) { showToast('Failed', 'error'); } finally { setLoading(false); }
   };
 
@@ -1474,7 +1476,7 @@ const Subscribers = ({ showToast }) => {
       const data = await res.json();
       if (data.success) setItems(data.subscribers);
     } catch (err) {
-      showToast('Failed to load audience repository', 'error');
+      showToast('Failed to load subscribers', 'error');
     } finally {
       setLoading(false);
     }
@@ -1494,7 +1496,7 @@ const Subscribers = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Subscriber entry purged');
+        showToast('Subscriber deleted');
         setConfirmDelete({ open: false, id: null });
         load();
       }
@@ -1531,7 +1533,7 @@ const Subscribers = ({ showToast }) => {
               className="pl-12 pr-6 py-[18px] rounded-full bg-white border border-gray-100 shadow-sm focus:shadow-md focus:border-gray-200 outline-none transition-all w-full md:w-72 font-bold text-gray-900 placeholder-gray-400" 
             />
           </div>
-          <ShinyButton icon={Send} variant="secondary" onClick={() => showToast('Broadcast system currently in maintenance mode', 'info')} className="rounded-full px-8 py-4">
+          <ShinyButton icon={Send} variant="secondary" onClick={() => showToast('Email broadcast is currently unavailable', 'info')} className="rounded-full px-8 py-4">
             Broadcast
           </ShinyButton>
         </div>
@@ -1595,6 +1597,7 @@ const Settings = ({ showToast }) => {
     address:'', 
     phone:'', 
     email:'' ,
+    socials: { instagram: '', facebook: '', linkedin: '', youtube: '', twitter: '', whatsapp: '' },
     impactStats: {
       studentsReached: '1650+',
       institutions: '14+',
@@ -1615,7 +1618,7 @@ const Settings = ({ showToast }) => {
       const dataSettings = await resSettings.json();
       if (dataSettings.success) setSite(dataSettings.settings);
     } catch (err) {
-      showToast('Failed to sync global registry', 'error');
+      showToast('Failed to load settings', 'error');
     }
   };
   useEffect(()=>{ load(); },[]);
@@ -1631,7 +1634,7 @@ const Settings = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) { 
-        showToast('New personnel authorized');
+        showToast('User authorized');
         setForm({ name:'', email:'', password:'', role:'admin' }); 
         load(); 
       } else {
@@ -1653,7 +1656,7 @@ const Settings = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Access credentials revoked');
+        showToast('Access revoked');
         setConfirmDelete({ open: false, id: null });
         load();
       }
@@ -1674,7 +1677,7 @@ const Settings = ({ showToast }) => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Global registry synchronized');
+        showToast('Settings saved successfully');
         load();
       }
     } catch (err) {
@@ -1751,6 +1754,21 @@ const Settings = ({ showToast }) => {
               <PremiumInput label="Students Reached" value={site.impactStats.studentsReached} onChange={e=>setSite({...site, impactStats: {...site.impactStats, studentsReached: e.target.value}})} />
               <PremiumInput label="Institutions" value={site.impactStats.institutions} onChange={e=>setSite({...site, impactStats: {...site.impactStats, institutions: e.target.value}})} />
               <PremiumInput label="Workshops Conducted" value={site.impactStats.workshops} onChange={e=>setSite({...site, impactStats: {...site.impactStats, workshops: e.target.value}})} />
+            </div>
+          </div>
+
+          <div className="pt-10 border-t border-gray-50">
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-gray-900 tracking-tight uppercase">Social Links</h4>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Links for footer and contact pages</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <PremiumInput label="Instagram" value={site.socials?.instagram || ''} onChange={e=>setSite({...site, socials: {...site.socials, instagram: e.target.value}})} placeholder="https://instagram.com/..." />
+              <PremiumInput label="Facebook" value={site.socials?.facebook || ''} onChange={e=>setSite({...site, socials: {...site.socials, facebook: e.target.value}})} placeholder="https://facebook.com/..." />
+              <PremiumInput label="LinkedIn" value={site.socials?.linkedin || ''} onChange={e=>setSite({...site, socials: {...site.socials, linkedin: e.target.value}})} placeholder="https://linkedin.com/in/..." />
+              <PremiumInput label="YouTube" value={site.socials?.youtube || ''} onChange={e=>setSite({...site, socials: {...site.socials, youtube: e.target.value}})} placeholder="https://youtube.com/..." />
+              <PremiumInput label="Twitter / X" value={site.socials?.twitter || ''} onChange={e=>setSite({...site, socials: {...site.socials, twitter: e.target.value}})} placeholder="https://twitter.com/..." />
+              <PremiumInput label="WhatsApp" value={site.socials?.whatsapp || ''} onChange={e=>setSite({...site, socials: {...site.socials, whatsapp: e.target.value}})} placeholder="https://wa.me/..." />
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Calendar, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import aboutImage from '../assets/media/about_image.webp';
+import aboutImage from '../assets/media/about_story2.webp';
 
 // Import extracted components
 import HeroSection from '../components/sections/HeroSection';
@@ -83,14 +83,17 @@ const Home = () => {
       <section className="py-24 bg-white">
           <div className="container mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
               <div className="relative">
-                  <div className="w-full h-[500px] bg-gray-100 rounded-xl overflow-hidden relative shadow-2xl">
-                      <img 
-                        src={aboutImage} 
-                        alt="About Samikaran"
-                        width="800"
-                        height="500"
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
-                      />
+                  <div className="w-full h-[500px] rounded-xl overflow-hidden relative shadow-2xl flex items-center justify-center bg-[#fdf9ee] group">
+                      <svg viewBox="0 0 500 500" className="w-full h-full group-hover:scale-105 transition-transform duration-700">
+                          {/* Top circle */}
+                          <circle cx="135" cy="145" r="35" fill="#f9d36a" />
+                          {/* Top bar */}
+                          <rect x="100" y="200" width="300" height="40" fill="#4a6730" />
+                          {/* Bottom bar */}
+                          <rect x="100" y="260" width="300" height="40" fill="#4a6730" />
+                          {/* Bottom circle */}
+                          <circle cx="365" cy="355" r="35" fill="#f9d36a" />
+                      </svg>
                   </div>
               </div>
               <div>
@@ -112,99 +115,95 @@ const Home = () => {
       <LiveProjects liveProjects={liveProjects} />
 
       {/* Moments Carousel Section — Stacked Card Parallax */}
-      <Snap3DCarousel items={galleryItems} onImageClick={(item, idx) => openModal(galleryItems[idx])} />
+      <Snap3DCarousel items={galleryItems} isPaused={!!selectedEvent} onImageClick={(item, idx) => openModal(galleryItems[idx])} />
 
       {/* Playbook Event Modal */}
       <AnimatePresence>
         {selectedEvent && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-10"
-          >
-            <button 
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 pointer-events-none">
+            {/* Background Blur Overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-black/95 backdrop-blur-xl pointer-events-auto"
               onClick={closeModal}
-              aria-label="Close modal"
-              className="absolute top-4 right-4 md:top-10 md:right-10 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all z-[110]"
-            >
-              <X size={24} className="md:w-7 md:h-7" />
-            </button>
+            />
 
-            <div className="container mx-auto h-full flex flex-col md:flex-row gap-10 items-center">
-              <div className="w-full md:w-2/3 h-[50vh] md:h-full relative group rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-                <AnimatePresence mode="wait">
-                  <motion.img 
-                    key={currentImgIdx}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.6 }}
-                    src={allImages[currentImgIdx]} 
-                    className="w-full h-full object-cover"
-                    alt="Gallery item"
-                  />
-                </AnimatePresence>
+            <div className="container mx-auto h-full flex flex-col items-center justify-center p-4 z-10 pointer-events-auto">
+              {/* Close button at top right corner */}
+              <button 
+                onClick={closeModal}
+                aria-label="Close modal"
+                className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110] backdrop-blur-md border border-white/20"
+              >
+                <X size={24} />
+              </button>
 
-                {/* Navigation Arrows */}
-                <div className="absolute inset-0 flex items-center justify-between px-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button aria-label="Previous image" onClick={prevImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
-                    <ChevronLeft size={32} />
-                  </button>
-                  <button aria-label="Next image" onClick={nextImg} className="w-14 h-14 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-primary transition-colors">
-                    <ChevronRight size={32} />
-                  </button>
-                </div>
-
-                {/* Progress Indicators */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
-                  {allImages.map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`h-1.5 rounded-full transition-all duration-300 ${i === currentImgIdx ? 'w-10 bg-primary' : 'w-3 bg-white/20'}`}
+              <motion.div 
+                className="w-full max-w-5xl relative group flex flex-col items-center"
+              >
+                {/* Image Section */}
+                <div className="w-full relative flex items-center justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.img 
+                      key={currentImgIdx}
+                      layoutId={currentImgIdx === 0 ? `carousel-img-${selectedEvent._id || galleryItems.indexOf(selectedEvent)}` : undefined}
+                      initial={{ opacity: currentImgIdx === 0 ? 1 : 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: currentImgIdx === 0 ? 1 : 0 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 25, mass: 1 }}
+                      style={{ borderRadius: 16 }}
+                      src={allImages[currentImgIdx]} 
+                      className="w-full h-[50vh] md:h-[70vh] object-cover shadow-2xl"
+                      alt="Gallery item"
                     />
-                  ))}
-                </div>
-              </div>
+                  </AnimatePresence>
 
-              <div className="w-full md:w-1/3 text-left">
-                <motion.span 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="text-primary font-black uppercase tracking-[0.3em] text-xs mb-4 block"
-                >
-                  {selectedEvent.type}
-                </motion.span>
-                <motion.h2 
+                  {/* Navigation Arrows */}
+                  {allImages.length > 1 && (
+                    <div className="absolute inset-0 flex items-center justify-between px-4 md:px-6 opacity-0 group-hover:opacity-100 transition-opacity z-[100] pointer-events-none">
+                      <button aria-label="Previous image" onClick={prevImg} className="pointer-events-auto w-12 h-12 md:w-16 md:h-16 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-primary transition-colors">
+                        <ChevronLeft size={32} />
+                      </button>
+                      <button aria-label="Next image" onClick={nextImg} className="pointer-events-auto w-12 h-12 md:w-16 md:h-16 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-primary transition-colors">
+                        <ChevronRight size={32} />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Progress Indicators */}
+                  {allImages.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-[100]">
+                      {allImages.map((_, i) => (
+                        <div 
+                          key={i} 
+                          className={`h-1.5 rounded-full transition-all duration-300 ${i === currentImgIdx ? 'w-8 bg-primary' : 'w-2 bg-white/50'}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Title block attached to the bottom */}
+                <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-tight"
+                  className="mt-6 text-center w-full max-w-3xl"
                 >
-                  {selectedEvent.title}
-                </motion.h2>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="space-y-6"
-                >
-                  <p className="text-gray-400 text-lg font-medium leading-relaxed">
-                    {selectedEvent.description}
-                  </p>
-                  <div className="pt-10 border-t border-white/10 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <Calendar size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Event Date</p>
-                      <p className="text-white font-bold">{new Date(selectedEvent.date).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
-                    </div>
-                  </div>
+                  <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-lg">
+                    {selectedEvent.title}
+                  </h2>
+                  {selectedEvent.date && (
+                    <p className="text-white/70 font-bold mt-2 drop-shadow-md uppercase tracking-widest text-sm">
+                      {new Date(selectedEvent.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
+                    </p>
+                  )}
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

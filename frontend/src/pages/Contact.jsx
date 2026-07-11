@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Send, Mailbox } from 'lucide-react';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Button } from '@/components/base/buttons/button';
 import { Select } from '@/components/base/select/select';
+import { cachedFetch } from '../utils/cachedFetch';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,14 @@ const Contact = () => {
   });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
+  const [settings, setSettings] = useState({ address:'', phone:'', email:'' });
+
+  useEffect(() => {
+    cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/settings`)
+      .then(r => r.json())
+      .then(d => { if (d.success) setSettings(d.settings); })
+      .catch(() => {});
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -85,7 +94,7 @@ const Contact = () => {
                     </div>
                     <div>
                         <h4 className="font-bold text-gray-900 text-lg mb-1">Our Office</h4>
-                        <p className="text-gray-600 leading-relaxed">123 NGO Street, Social Welfare Area,<br/>New Delhi, India - 110001</p>
+                        <p className="text-gray-600 leading-relaxed whitespace-pre-line">{settings.address || '—'}</p>
                     </div>
                  </div>
                  
@@ -95,8 +104,7 @@ const Contact = () => {
                     </div>
                     <div>
                         <h4 className="font-bold text-gray-900 text-lg mb-1">Phone</h4>
-                        <p className="text-gray-600">+91 98765 43210</p>
-                        <p className="text-gray-400 text-sm">Mon-Fri 9am to 6pm</p>
+                        <p className="text-gray-600">{settings.phone || '—'}</p>
                     </div>
                  </div>
 
@@ -106,8 +114,7 @@ const Contact = () => {
                     </div>
                     <div>
                         <h4 className="font-bold text-gray-900 text-lg mb-1">Email</h4>
-                        <p className="text-gray-600">contact@samikaran.org</p>
-                        <p className="text-gray-600">support@samikaran.org</p>
+                        <p className="text-gray-600">{settings.email || '—'}</p>
                     </div>
                  </div>
               </div>

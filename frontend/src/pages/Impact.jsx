@@ -201,7 +201,7 @@ const Impact = () => {
                               className="flex flex-col gap-4 group cursor-pointer"
                           >
                               <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
-                                  <img src={getImg(project)} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                  <img src={getImg(project)} alt={project.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                               </div>
                               <div className="flex items-start justify-between">
@@ -210,7 +210,7 @@ const Impact = () => {
                                       <p className="text-gray-500 mt-1 line-clamp-2">{project.description}</p>
                                   </div>
                                   <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
-                                      {project.date || new Date(project.createdAt || Date.now()).getFullYear()}
+                                      {project.date || (new Date(project.createdAt || Date.now()).getFullYear() || new Date().getFullYear())}
                                   </div>
                               </div>
                           </div>
@@ -237,7 +237,7 @@ const Impact = () => {
                           >
                               <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center relative">
                                   {report.image || report.url ? (
-                                      <img src={getImg(report)} alt={report.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                      <img src={getImg(report)} alt={report.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                                   ) : (
                                       <div className="w-full h-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
                                           <FileText size={48} className="text-secondary opacity-50 group-hover:scale-110 transition-transform duration-500" />
@@ -250,7 +250,7 @@ const Impact = () => {
                                       <p className="text-gray-500 mt-1 line-clamp-2">{report.description}</p>
                                   </div>
                                   <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
-                                      {report.date || new Date(report.createdAt || Date.now()).getFullYear()}
+                                      {report.date || (new Date(report.createdAt || Date.now()).getFullYear() || new Date().getFullYear())}
                                   </div>
                               </div>
                           </div>

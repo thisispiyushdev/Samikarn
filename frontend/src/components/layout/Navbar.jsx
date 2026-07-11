@@ -30,10 +30,10 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 w-full z-[100] bg-white shadow-md border-b border-gray-100"
     >
-      <div className="container mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto w-full px-4 md:px-8 h-16 md:h-20 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center group shrink-0 h-16 md:h-20 w-40 md:w-56 overflow-hidden" onClick={() => dispatch(closeMobileMenu())}>
-            <img src={logo} alt="Samikaran Logo" className="w-[60%] md:w-[180%] max-w-[80%] h-auto object-contain origin-center transition-transform duration-300 group-hover:scale-105" />
+        <Link to="/" className="flex items-center justify-center group shrink-0 h-16 md:h-20 w-48 md:w-64 overflow-hidden" onClick={() => dispatch(closeMobileMenu())}>
+            <img src={logo} alt="Samikaran Logo" className="w-[85%] mt-4 md:mt-6 md:w-[100%] max-w-[100%] h-auto object-contain origin-center transition-transform duration-300 group-hover:scale-105" />
         </Link>
         
         {/* Desktop Nav */}

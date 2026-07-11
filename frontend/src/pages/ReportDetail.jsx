@@ -112,7 +112,7 @@ const ReportDetail = () => {
                         <img 
                             src={coverImg} 
                             alt={report.title} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 backdrop-blur-md rounded-full p-5">
