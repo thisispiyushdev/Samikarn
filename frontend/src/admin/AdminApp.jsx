@@ -379,13 +379,13 @@ const Login = ({ onLogin }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-lg z-10"
       >
-        <div className="flex flex-col items-center mb-12">
+        <div className="flex flex-col items-center mb-8">
           <motion.div 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
-            className="mb-6"
+            className="mb-0"
           >
-            <img src={logo} alt="Samikaran Logo" className="h-28 w-auto object-contain drop-shadow-sm" />
+            <img src={logo} alt="Samikaran Logo" className="h-48 w-auto object-contain drop-shadow-sm" />
           </motion.div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>
           <p className="text-gray-500 font-medium mt-2 text-sm">Sign in to manage Samikaran</p>
@@ -1647,7 +1647,7 @@ const Settings = ({ showToast, user }) => {
       });
       const data = await res.json();
       if (data.success) { 
-        showToast('User authorized');
+        showToast('Admin created successfully');
         setForm({ name:'', email:'', password:'', role:'admin' }); 
         load(); 
       } else {
@@ -1702,8 +1702,8 @@ const Settings = ({ showToast, user }) => {
     <div className="space-y-16">
       <ConfirmModal 
         isOpen={confirmDelete.open} 
-        title="Revoke Clearance?" 
-        message="This will immediately terminate the personnel's access to the core engine. This action is irreversible." 
+        title="Remove Admin?" 
+        message="This will immediately remove this user's admin privileges. This action is irreversible." 
         onConfirm={removeAdmin} 
         onCancel={() => setConfirmDelete({ open: false, id: null })} 
         loading={loading}
@@ -1711,27 +1711,27 @@ const Settings = ({ showToast, user }) => {
 
       {user?.role === 'superadmin' && (
         <div className="grid lg:grid-cols-2 gap-16">
-          <SpotlightCard title="Access Authorization" subtitle="Onboard new core administrators">
+          <SpotlightCard title="Add New Admin" subtitle="Create a new admin account">
             <form onSubmit={createAdmin} className="space-y-8 mt-6">
-              <PremiumInput label="Personnel Identity" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Operator Name" required />
-              <PremiumInput label="Registry Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} type="email" placeholder="user@local" required />
-              <PremiumInput label="Primary Secret" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} type="password" placeholder="••••••••" required />
+              <PremiumInput label="Full Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="e.g., John Doe" required />
+              <PremiumInput label="Email Address" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} type="email" placeholder="user@domain.com" required />
+              <PremiumInput label="Password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} type="password" placeholder="••••••••" required />
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Clearance Level</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Role</label>
                 <select 
                   value={form.role} 
                   onChange={e=>setForm({...form,role:e.target.value})} 
                   className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-4 outline-none focus:bg-white focus:border-gray-900/20 font-semibold text-xs tracking-widest text-gray-800 transition-all uppercase"
                 >
-                  <option value="admin">Operator (Level 1)</option>
-                  <option value="superadmin">Commander (Level 2)</option>
+                  <option value="admin">Admin</option>
+                  <option value="superadmin">Superadmin</option>
                 </select>
               </div>
-              <ShinyButton className="w-full" loading={loading} icon={UserPlus}>Authorize Personnel</ShinyButton>
+              <ShinyButton className="w-full" loading={loading} icon={UserPlus}>Create Admin</ShinyButton>
             </form>
           </SpotlightCard>
 
-          <SpotlightCard title="Authorized Personnel" subtitle="Active security clearanced accounts">
+          <SpotlightCard title="Admin Users" subtitle="Active administrator accounts">
             <div className="space-y-6 max-h-[700px] overflow-auto pr-2 custom-scrollbar">
               {admins.map(a=>(
                 <div key={a._id || a.id} className="flex justify-between items-center p-8 rounded-xl border border-gray-50 bg-[#fbfbfd] hover:border-gray-200 transition-all group shadow-sm hover:shadow-md">
@@ -1752,12 +1752,12 @@ const Settings = ({ showToast, user }) => {
         </div>
       )}
 
-      <SpotlightCard title="Global Registry" subtitle="Platform-wide identity metadata">
+      <SpotlightCard title="Website Settings" subtitle="Global configuration for the website">
         <form onSubmit={saveSettings} className="space-y-12 mt-10">
           <div className="grid md:grid-cols-3 gap-12">
-            <PremiumInput label="Operational HQ" icon={MapPin} value={site.address||''} onChange={e=>setSite({...site,address:e.target.value})} placeholder="Street, Sector, City" />
-            <PremiumInput label="Comm Hotline" icon={Phone} value={site.phone||''} onChange={e=>setSite({...site,phone:e.target.value})} placeholder="+91 00000 00000" />
-            <PremiumInput label="Secure Inbox" icon={Mail} value={site.email||''} onChange={e=>setSite({...site,email:e.target.value})} type="email" placeholder="core@samikaran.org" />
+            <PremiumInput label="Address" icon={MapPin} value={site.address||''} onChange={e=>setSite({...site,address:e.target.value})} placeholder="Street, Sector, City" />
+            <PremiumInput label="Phone Number" icon={Phone} value={site.phone||''} onChange={e=>setSite({...site,phone:e.target.value})} placeholder="+91 00000 00000" />
+            <PremiumInput label="Email" icon={Mail} value={site.email||''} onChange={e=>setSite({...site,email:e.target.value})} type="email" placeholder="contact@samikaran.org" />
           </div>
 
           <div className="pt-10 border-t border-gray-50">
@@ -1788,7 +1788,7 @@ const Settings = ({ showToast, user }) => {
           </div>
 
           <div className="pt-10 border-t border-gray-50 flex justify-end">
-            <ShinyButton className="w-full md:w-auto px-16" icon={CheckCircle2}>Synchronize All Nodes</ShinyButton>
+            <ShinyButton className="w-full md:w-auto px-16" icon={CheckCircle2}>Save Settings</ShinyButton>
           </div>
         </form>
       </SpotlightCard>
