@@ -178,7 +178,7 @@ const ProjectDetail = () => {
 
             {/* Gallery Grid Section */}
             {project.gallery && project.gallery.length > 0 && (
-                <section className="w-full py-24 px-5 md:px-10 bg-white border-t border-gray-100">
+                <section className="w-full py-10 md:py-24 px-5 md:px-10 bg-white border-t border-gray-100">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
                             <p className="text-sm font-bold uppercase tracking-widest text-primary mb-3">Visual Documentation</p>
@@ -303,7 +303,7 @@ const ProjectDetail = () => {
             </AnimatePresence>
 
             {/* Next Project / Footer Call to Action */}
-            <section className="w-full py-24 px-5 md:px-10 border-t border-gray-200 bg-white flex justify-center">
+            <section className="w-full py-10 md:py-24 px-5 md:px-10 border-t border-gray-200 bg-white flex justify-center">
                 <Link to="/donate" className="group flex flex-col items-center gap-4">
                     <span className="text-sm font-bold uppercase tracking-widest text-gray-400 group-hover:text-primary transition-colors">Inspired by this?</span>
                     <div className="flex items-center gap-2">

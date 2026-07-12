@@ -45,7 +45,7 @@ const Testimonials = () => {
   }, []);
 
   if (loading) {
-     return <div className="py-24 text-center">Loading stories...</div>;
+     return <div className="py-10 md:py-24 text-center">Loading stories...</div>;
   }
 
   if (testimonials.length === 0) {
@@ -59,7 +59,7 @@ const Testimonials = () => {
   const col3 = testimonials.slice(third * 2);
 
   return (
-    <section className="py-24 bg-gray-50 overflow-hidden relative">
+    <section className="py-10 md:py-24 bg-gray-50 overflow-hidden relative">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-3xl z-0 pointer-events-none" />
       <div className="container mx-auto px-4 relative z-10 text-center mb-16">
         <h2 className="text-primary font-black uppercase tracking-[0.2em] text-xs mb-4">Loved by our community</h2>

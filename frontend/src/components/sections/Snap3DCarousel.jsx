@@ -114,7 +114,7 @@ const Snap3DCarousel = ({ items = [], onImageClick, isPaused = false }) => {
 
   return (
     <div 
-      className="relative w-full overflow-hidden bg-primary py-24 min-h-[90vh] flex flex-col justify-center items-center font-sans"
+      className="relative w-full overflow-hidden bg-primary py-10 md:py-24 min-h-[70vh] md:min-h-[90vh] flex flex-col justify-center items-center font-sans"
     >
       
       {/* Static Section Header */}

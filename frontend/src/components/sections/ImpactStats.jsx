@@ -62,7 +62,7 @@ const AnimatedCounter = ({ text, className }) => {
 
 const ImpactStats = ({ stats }) => {
   return (
-    <section className="py-24 md:py-32 bg-[#FAF9F6] relative overflow-hidden">
+    <section className="py-12 md:py-32 bg-[#FAF9F6] relative overflow-hidden">
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         
         {/* Header */}
@@ -162,7 +162,7 @@ const ImpactStats = ({ stats }) => {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.8 }}
-              className="absolute top-[40%] left-[20%] transform -translate-y-1/2 bg-[#282B38] rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[180px]"
+              className="absolute top-[20%] md:top-[40%] left-[5%] md:left-[20%] transform -translate-y-1/2 bg-[#282B38] rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[160px] md:min-w-[180px]"
            >
               <div className="w-10 h-10 rounded-full bg-[#3D382E] flex items-center justify-center">
                  {/* Lightning bolt icon */}
@@ -180,7 +180,7 @@ const ImpactStats = ({ stats }) => {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 1 }}
-              className="absolute top-[10%] right-[5%] md:right-[15%] bg-white rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[180px]"
+              className="absolute top-[50%] md:top-[10%] right-[5%] md:right-[15%] bg-white rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[160px] md:min-w-[180px]"
            >
               <div className="w-10 h-10 rounded-full bg-[#E8F8F2] flex items-center justify-center">
                  {/* Upward trend arrow icon */}
@@ -198,7 +198,7 @@ const ImpactStats = ({ stats }) => {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 1.2 }}
-              className="absolute bottom-[15%] right-[10%] md:right-[20%] bg-white rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[180px]"
+              className="absolute bottom-[5%] md:bottom-[15%] left-[5%] md:left-auto md:right-[20%] bg-white rounded-xl p-4 md:p-5 shadow-2xl flex items-center space-x-4 z-10 min-w-[160px] md:min-w-[180px]"
            >
               <div className="w-10 h-10 rounded-full bg-[#EFF4FF] flex items-center justify-center">
                  {/* Target/Bullseye icon */}

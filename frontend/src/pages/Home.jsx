@@ -80,7 +80,7 @@ const Home = () => {
       <ImpactStats stats={impactStats} />
 
       {/* Quick About */}
-      <section className="py-24 bg-white">
+      <section className="py-10 md:py-24 bg-white">
           <div className="container mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
               <div className="relative">
                   <div className="w-full h-[500px] rounded-xl overflow-hidden relative shadow-2xl flex items-center justify-center bg-[#fdf9ee] group">
@@ -155,8 +155,8 @@ const Home = () => {
                       exit={{ opacity: currentImgIdx === 0 ? 1 : 0 }}
                       transition={{ type: "spring", stiffness: 200, damping: 25, mass: 1 }}
                       style={{ borderRadius: 16 }}
-                      src={allImages[currentImgIdx]} 
-                      className="w-full h-[50vh] md:h-[70vh] object-cover shadow-2xl"
+                      src={allImages[currentImgIdx]}
+                      className="w-full h-[50vh] md:h-[70vh] object-contain shadow-2xl"
                       alt="Gallery item"
                     />
                   </AnimatePresence>
@@ -211,7 +211,7 @@ const Home = () => {
       <Testimonials />
 
       {/* CTA */}
-      <section className="py-24 bg-secondary relative overflow-hidden">
+      <section className="py-10 md:py-24 bg-secondary relative overflow-hidden">
            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent" />
            <div className="container mx-auto px-4 text-center relative z-10">
                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">Join Hands With Us</h2>

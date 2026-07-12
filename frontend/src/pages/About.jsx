@@ -150,7 +150,7 @@ const About = () => {
       </section>
 
       {/* Focus Areas Section */}
-      <section className="py-24 max-w-7xl mx-auto px-6 md:px-12">
+      <section className="py-10 md:py-24 max-w-7xl mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
           <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Focus Areas</h2>
           <h3 className="text-4xl font-bold text-gray-900 mb-4">Supporting Learning & Opportunity</h3>
@@ -201,7 +201,7 @@ const About = () => {
 
 
       {/* Approach and Values */}
-      <section className="py-24 max-w-7xl mx-auto px-6 md:px-12">
+      <section className="py-10 md:py-24 max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16 max-w-3xl mx-auto">
               <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Our Foundation</h2>
               <h3 className="text-4xl font-bold text-gray-900 mb-6">Approach & Values</h3>
@@ -240,7 +240,7 @@ const About = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 bg-gray-50/50 border-t border-gray-100">
+      <section className="py-10 md:py-24 bg-gray-50/50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16">
               <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Have Questions?</h2>
@@ -261,7 +261,7 @@ const About = () => {
       </section>
 
        {/* CTA */}
-       <section className="py-24 bg-primary relative overflow-hidden text-center">
+       <section className="py-10 md:py-24 bg-primary relative overflow-hidden text-center">
            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent" />
            <div className="relative z-10 max-w-3xl mx-auto px-6">
                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">What's Next</h2>

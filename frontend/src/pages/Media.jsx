@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ExternalLink, Newspaper, Award, PlayCircle, Search, Filter } from 'lucide-react';
+import { Calendar, ExternalLink, Newspaper, Award, PlayCircle, Search, Filter, X } from 'lucide-react';
 import { cachedFetch } from '../utils/cachedFetch';
 
 const Media = () => {
@@ -8,6 +8,7 @@ const Media = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -150,7 +151,10 @@ const Media = () => {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.5, delay: idx * 0.05 }}
                     className="flex flex-col gap-4 group cursor-pointer"
-                    onClick={() => { if(item.link) window.open(item.link, '_blank'); }}
+                    onClick={() => { 
+                      if(item.link) window.open(item.link, '_blank'); 
+                      else setSelectedItem(item);
+                    }}
                   >
                     <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
                       <img 
@@ -182,7 +186,7 @@ const Media = () => {
       )}
 
       {/* Media Grid */}
-      <section className="py-24">
+      <section className="py-10 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             <AnimatePresence mode="popLayout">
@@ -195,7 +199,10 @@ const Media = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.5, delay: idx * 0.05 }}
                   className="flex flex-col gap-4 group cursor-pointer"
-                  onClick={() => { if(item.link) window.open(item.link, '_blank'); }}
+                  onClick={() => { 
+                    if(item.link) window.open(item.link, '_blank'); 
+                    else setSelectedItem(item);
+                  }}
                 >
                   <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
                     <img 
@@ -234,6 +241,69 @@ const Media = () => {
           )}
         </div>
       </section>
+
+      {/* Media Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 pointer-events-none">
+            {/* Background Blur Overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-black/95 backdrop-blur-xl pointer-events-auto"
+              onClick={() => setSelectedItem(null)}
+            />
+
+            <div className="container mx-auto h-full flex flex-col items-center justify-center p-4 z-10 pointer-events-auto relative">
+              <button 
+                onClick={() => setSelectedItem(null)}
+                aria-label="Close modal"
+                className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110] backdrop-blur-md border border-white/20"
+              >
+                <X size={24} />
+              </button>
+
+              <motion.div 
+                className="w-full max-w-5xl relative group flex flex-col items-center"
+              >
+                <div className="w-full relative flex items-center justify-center">
+                  <motion.img 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                    style={{ borderRadius: 16 }}
+                    src={selectedItem.mainImage} 
+                    className="w-full h-auto max-h-[50vh] md:max-h-[70vh] object-contain shadow-2xl"
+                    alt={selectedItem.title || "Media item"}
+                  />
+                </div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 text-center w-full max-w-3xl"
+                >
+                  <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-lg">
+                    {selectedItem.title}
+                  </h2>
+                  <p className="text-white/70 mt-4 text-lg">
+                    {selectedItem.description}
+                  </p>
+                  {selectedItem.date && (
+                    <p className="text-white/50 font-bold mt-4 drop-shadow-md uppercase tracking-widest text-sm">
+                      {new Date(selectedItem.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
+                    </p>
+                  )}
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

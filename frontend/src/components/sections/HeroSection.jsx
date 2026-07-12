@@ -53,7 +53,7 @@ const HeroSection = () => {
   const yParallax = useTransform(scrollY, [0, 1000], [0, 400]);
 
   return (
-    <section ref={heroRef} className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-20 pb-10 bg-black">
+    <section ref={heroRef} className="relative min-h-[70vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-20 pb-10 bg-black">
       
       {/* Parallax Background Container */}
       <motion.div 
@@ -84,7 +84,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 z-20 flex flex-col items-center text-center w-full max-w-5xl">
         
         
-        <h1 className="hero-element text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter whitespace-nowrap">
+        <h1 className="hero-element text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight mb-6 md:mb-8 text-white drop-shadow-2xl tracking-tighter">
           Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400 drop-shadow-md">Samikaran</span>
         </h1>
 

@@ -55,7 +55,7 @@ const Impact = () => {
         
 
       {/* Programs and Journey */}
-      <section className="bg-gray-900 py-24 text-white">
+      <section className="bg-gray-900 py-10 md:py-24 text-white">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="text-center mb-16">
               <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Our Journey & Programs</h2>
@@ -126,7 +126,7 @@ const Impact = () => {
       </section>
 
       {/* Upcoming & Stats */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-10 md:py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-12">
               <div className="md:col-span-5">
                   <h3 className="text-4xl font-bold text-gray-900 mb-8">Our Impact</h3>
@@ -160,7 +160,7 @@ const Impact = () => {
                   >
                       <h4 className="text-2xl font-bold text-gray-900 mb-3">Baat-Cheet Activity Booklet</h4>
                       <p className="text-gray-600 mb-4">
-                          We are launching an activity-based booklet designed to support social and emotional learning along with English comprehension for children. It includes 40+ interactive activities for children aged 7–17.
+                          We are launching an activity-based booklet designed to support social and emotional learning along with English comprehension for children. It includes 40+ interactive activities for children aged 7 to 17.
                       </p>
                       <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
                           <span className="font-bold text-gray-900">Goal:</span> <span className="text-gray-600">To create a simple and accessible learning resource that helps children build confidence while strengthening language and emotional awareness.</span>
@@ -187,7 +187,7 @@ const Impact = () => {
       </section>
 {/* Active Mission & Projects */}
       {liveProjects.length > 0 && (
-          <section className="py-24 bg-white">
+          <section className="py-10 md:py-24 bg-white">
               <div className="max-w-7xl mx-auto px-6 md:px-12">
                   <div className="text-center mb-16">
                       <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-2">Our Work</h2>
@@ -222,7 +222,7 @@ const Impact = () => {
 
       {/* Publications & Reports */}
       {liveReports.length > 0 && (
-          <section className="py-24 bg-gray-50 border-t border-gray-100">
+          <section className="py-10 md:py-24 bg-gray-50 border-t border-gray-100">
               <div className="max-w-7xl mx-auto px-6 md:px-12">
                   <div className="text-center mb-16">
                       <h2 className="text-sm font-bold text-secondary uppercase tracking-widest mb-2">Resources</h2>
