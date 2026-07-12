@@ -78,44 +78,22 @@ const GridBackground = () => {
   );
 };
 
-const SpotlightCard = ({ children, className, title, subtitle, delay = 0 }) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
+const SpotlightCard = ({ children, className, title, subtitle }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      onMouseMove={handleMouseMove}
+    <div
       className={cn(
-        "relative rounded-2xl border border-gray-200 bg-white p-6 shadow-sm overflow-hidden group/spotlight",
+        "rounded-2xl border border-gray-100 bg-white p-8 shadow-[0_4px_24px_rgb(0,0,0,0.02)]",
         className
       )}
     >
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover/spotlight:opacity-100 transition-opacity duration-300"
-        style={{
-          background: useTransform(
-            [mouseX, mouseY],
-            ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(99, 102, 241, 0.06), transparent 80%)`
-          ),
-        }}
-      />
       {title && (
-        <div className="mb-4">
+        <div className="mb-6">
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h3>
-          {subtitle && <p className="text-sm font-medium text-gray-400 mt-1 uppercase tracking-wider">{subtitle}</p>}
+          {subtitle && <p className="text-sm font-medium text-gray-500 mt-1">{subtitle}</p>}
         </div>
       )}
       <div className="relative z-10">{children}</div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -123,21 +101,21 @@ const PremiumInput = ({ label, icon: Icon, type = 'text', ...props }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="space-y-2 w-full">
-      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest transition-colors duration-200">
+    <div className="space-y-1.5 w-full">
+      <label className="text-sm font-medium text-gray-700 transition-colors duration-200">
         {label}
       </label>
       <div
         className={cn(
           "relative flex items-center rounded-xl bg-gray-50/50 border transition-all duration-200",
           isFocused 
-            ? "border-indigo-500 bg-white shadow-[0_0_0_4px_rgba(99,102,241,0.1)]" 
+            ? "border-gray-900 bg-white shadow-[0_0_0_4px_rgba(0,0,0,0.05)]" 
             : "border-gray-200 hover:border-gray-300"
         )}
       >
         {Icon && (
           <div className="pl-4 flex items-center justify-center text-gray-400">
-            <Icon size={18} className={cn("transition-colors duration-200", isFocused && "text-indigo-500")} />
+            <Icon size={18} className={cn("transition-colors duration-200", isFocused && "text-gray-900")} />
           </div>
         )}
         <input
@@ -145,7 +123,7 @@ const PremiumInput = ({ label, icon: Icon, type = 'text', ...props }) => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           className={cn(
-            "w-full bg-transparent px-4 py-3.5 text-sm font-semibold text-gray-900 outline-none placeholder:text-gray-400 placeholder:font-normal",
+            "w-full bg-transparent px-4 py-3 text-sm font-medium text-gray-900 outline-none placeholder:text-gray-400",
             Icon && "pl-3"
           )}
           {...props}
@@ -163,12 +141,12 @@ const ShinyButton = ({
   variant = 'primary', 
   ...props 
 }) => {
-  const baseStyles = "relative flex items-center justify-center gap-2 rounded-xl font-bold text-sm tracking-wider transition-all duration-300 overflow-hidden select-none px-6 py-3.5 shadow-sm active:scale-[0.98]";
+  const baseStyles = "relative flex items-center justify-center gap-2 rounded-xl font-medium text-sm transition-all duration-200 select-none px-6 py-3 active:scale-[0.98]";
   
   const variants = {
-    primary: "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md border border-indigo-600",
-    secondary: "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200",
-    danger: "bg-red-600 hover:bg-red-700 text-white hover:shadow-lg hover:shadow-red-600/10 border border-red-600",
+    primary: "bg-gray-900 hover:bg-gray-800 text-white shadow-sm border border-gray-900",
+    secondary: "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm",
+    danger: "bg-red-50 hover:bg-red-100 text-red-600 border border-red-100",
   };
 
   return (
@@ -177,15 +155,11 @@ const ShinyButton = ({
       disabled={loading}
       {...props}
     >
-      {variant !== 'secondary' && (
-        <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-      )}
-      
       {loading ? (
-        <RefreshCcw className="animate-spin" size={18} />
+        <RefreshCcw className="animate-spin" size={16} />
       ) : (
         <>
-          {Icon && <Icon size={18} />}
+          {Icon && <Icon size={16} />}
           <span>{children}</span>
         </>
       )}
@@ -1732,19 +1706,19 @@ const Settings = ({ showToast, user }) => {
           </SpotlightCard>
 
           <SpotlightCard title="Admin Users" subtitle="Active administrator accounts">
-            <div className="space-y-6 max-h-[700px] overflow-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 max-h-[700px] overflow-auto pr-2 custom-scrollbar">
               {admins.map(a=>(
-                <div key={a._id || a.id} className="flex justify-between items-center p-8 rounded-xl border border-gray-50 bg-[#fbfbfd] hover:border-gray-200 transition-all group shadow-sm hover:shadow-md">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-xl bg-gray-900 text-white flex items-center justify-center font-semibold text-2xl shadow-xl">
+                <div key={a._id || a.id} className="flex justify-between items-center p-4 rounded-xl hover:bg-gray-50 transition-colors group border border-transparent hover:border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold text-lg">
                       {a.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 text-lg tracking-tight uppercase leading-tight">{a.name}</h4>
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.25em] mt-2">{a.role} • {a.email}</p>
+                      <h4 className="font-semibold text-gray-900">{a.name}</h4>
+                      <p className="text-xs font-medium text-gray-500 mt-0.5 capitalize">{a.role === 'superadmin' ? 'Superadmin' : 'Admin'} • {a.email}</p>
                     </div>
                   </div>
-                  <button onClick={()=>setConfirmDelete({ open: true, id: a._id || a.id })} className="w-14 h-14 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all hover:scale-110"><Trash2 size={22} /></button>
+                  <button onClick={()=>setConfirmDelete({ open: true, id: a._id || a.id })} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"><Trash2 size={18} /></button>
                 </div>
               ))}
             </div>
