@@ -513,7 +513,8 @@ const Donations = ({ showToast }) => {
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); fetchDonations(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search} 
@@ -609,7 +610,8 @@ const Messages = ({ showToast }) => {
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); fetchMessages(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search} 
@@ -872,10 +874,20 @@ const Dashboard = ({ showToast }) => {
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+          <p className="text-gray-500 font-medium text-sm mt-1">Overview of your NGO</p>
+        </div>
+        <button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95">
+          <RefreshCcw size={16} /> Refresh
+        </button>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {metrics.map((m, i) => (
           <SpotlightCard key={i} delay={i * 0.1}>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-4"><div><h2 className="text-2xl font-bold text-gray-900">Dashboard</h2><p className="text-gray-500 font-medium text-sm mt-1">Overview of your NGO</p></div><button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95"><RefreshCcw size={16} /> Refresh</button></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", m.color)}>
                 <m.icon size={24} />
               </div>
@@ -1094,6 +1106,7 @@ const Projects = ({ showToast }) => {
           <p className="text-gray-500 font-medium text-sm mt-1">Manage project records</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
             <input 
@@ -1410,6 +1423,7 @@ const Reports = ({ showToast }) => {
           <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Archive Records</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
             <input 
@@ -1565,6 +1579,7 @@ const Announcements = ({ showToast }) => {
           <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Archive Records</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
             <input 
@@ -1688,6 +1703,7 @@ const Subscribers = ({ showToast }) => {
           <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Subscriber Database</p>
         </div>
         <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+          <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
             <input 
@@ -2052,7 +2068,8 @@ const GalleryAdmin = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search}
@@ -2238,7 +2255,8 @@ const CarouselManager = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search}
@@ -2431,7 +2449,8 @@ const TestimonialsAdmin = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search}
@@ -2664,7 +2683,8 @@ const CausesAdmin = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative group flex-1 w-full md:max-w-md">
+        <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+          <div className="relative group flex-1 w-full md:max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             value={search}
