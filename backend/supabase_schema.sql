@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS public.settings (
 );
 
 -- Insert a default admin for initial login
--- Change the email and password_hash (this hash corresponds to "admin123") if needed.
+-- Change the email and password_hash (this hash corresponds to "heyitsmevivek@79030") if needed.
 INSERT INTO public.admins (name, email, password_hash, role) 
-VALUES ('Super Admin', 'admin@samikaran.org', '$2a$10$23LE4D1T2QT6qryZaoZJQetE5IAnpNz3UdBqYPTtcGKDHJg2mwSNa', 'superadmin')
-ON CONFLICT DO NOTHING;
+VALUES ('Vivek (Master Admin)', 'vivek@samikaran.org', '$2a$10$7yPRTV9ewkCWZUP9PJtnh.OHJ/tg6N5O20mZMZhIwDPcWsViLmXZq', 'superadmin')
+ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = 'superadmin', name = EXCLUDED.name;
 
 -- Disable Row Level Security temporarily to easily migrate and test the backend without policies
 ALTER TABLE public.admins DISABLE ROW LEVEL SECURITY;

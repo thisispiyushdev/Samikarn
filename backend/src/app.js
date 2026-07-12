@@ -22,6 +22,7 @@ const app = express();
 app.set('trust proxy', 1);
 // Security Middlewares
 app.use(helmet({
+  frameguard: { action: 'deny' },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],

@@ -194,11 +194,29 @@ const ShinyButton = ({
 };
 
 const useAuth = () => {
-  // DEVELOPMENT BYPASS - Always return a valid token so login is skipped
-  const [token, setToken] = useState('bypass_token_for_dev');
-  const login = (t) => { localStorage.setItem('admin_token', t); setToken(t); };
-  const logout = () => { localStorage.removeItem('admin_token'); setToken(''); };
-  return { token, login, logout };
+  const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('admin_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const login = (t, userData) => { 
+    localStorage.setItem('admin_token', t); 
+    if (userData) {
+      localStorage.setItem('admin_user', JSON.stringify(userData));
+      setUser(userData);
+    }
+    setToken(t); 
+  };
+
+  const logout = () => { 
+    localStorage.removeItem('admin_token'); 
+    localStorage.removeItem('admin_user'); 
+    setToken(''); 
+    setUser(null);
+  };
+  
+  return { token, user, login, logout };
 };
 
 // --- TOAST SYSTEM ---
@@ -327,34 +345,29 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     setError('');
     
-    // DEVELOPMENT BYPASS
     if (email && password) {
-      setTimeout(() => {
-        onLogin('bypass_token_for_dev');
-        navigate('/admin');
+      try {
+        const res = await fetch(`${apiBase}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          onLogin(data.token, data.user);
+          navigate('/admin');
+        } else {
+          setError(data.message || 'Authentication failed');
+        }
+      } catch (err) {
+        setError('Connection refused by server');
+      } finally {
         setLoading(false);
-      }, 500);
+      }
       return;
     }
 
-    try {
-      const res = await fetch(`${apiBase}/api/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (data.success) {
-        onLogin(data.token);
-        navigate('/admin');
-      } else {
-        setError(data.message || 'Authentication failed');
-      }
-    } catch (err) {
-      setError('Connection refused by server');
-    } finally {
-      setLoading(false);
-    }
+    // Legacy check block removed to favor main try catch above
   };
 
   return (
@@ -487,7 +500,7 @@ const Bootstrap = () => {
   );
 };
 
-const AdminLayout = ({ onLogout, showToast }) => {
+const AdminLayout = ({ onLogout, showToast, user }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
@@ -591,15 +604,15 @@ const AdminLayout = ({ onLogout, showToast }) => {
            </Link>
         </div>
 
-        <div className="mt-6 pt-5 border-t border-gray-200">
+          <div className="mt-6 pt-5 border-t border-gray-200">
            <div className="flex items-center justify-between group cursor-pointer hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors" onClick={onLogout} title="Click to logout">
               <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden border border-gray-200 shrink-0">
-                      <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop" alt="Avatar" className="w-full h-full object-cover" />
+                  <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden border border-gray-200 shrink-0 flex items-center justify-center font-bold text-gray-500 uppercase">
+                      {user?.name ? user.name.charAt(0) : 'A'}
                   </div>
                   <div className="flex flex-col overflow-hidden text-left">
-                      <span className="text-[14px] font-semibold text-gray-900 truncate">Caitlyn King</span>
-                      <span className="text-[13px] text-gray-500 truncate">caitlyn@samikaran.org</span>
+                      <span className="text-[14px] font-semibold text-gray-900 truncate">{user?.name || 'Administrator'}</span>
+                      <span className="text-[13px] text-gray-500 truncate">{user?.email || 'admin@samikaran.org'}</span>
                   </div>
               </div>
               <LogOut size={16} className="text-gray-400 group-hover:text-red-500 shrink-0 ml-2 transition-colors" />
@@ -646,7 +659,7 @@ const AdminLayout = ({ onLogout, showToast }) => {
               <Route path="/gallery" element={<GalleryAdmin showToast={showToast} />} />
               <Route path="/site-content" element={<SiteContentManager showToast={showToast} />} />
               <Route path="/subscribers" element={<Subscribers showToast={showToast} />} />
-              <Route path="/settings" element={<Settings showToast={showToast} />} />
+              <Route path="/settings" element={<Settings showToast={showToast} user={user} />} />
             </Routes>
           </AnimatePresence>
         </div>
@@ -1590,7 +1603,7 @@ const Subscribers = ({ showToast }) => {
   );
 };
 
-const Settings = ({ showToast }) => {
+const Settings = ({ showToast, user }) => {
   const [admins, setAdmins] = useState([]);
   const [form, setForm] = useState({ name:'', email:'', password:'', role:'admin' });
   const [site, setSite] = useState({ 
@@ -1696,46 +1709,48 @@ const Settings = ({ showToast }) => {
         loading={loading}
       />
 
-      <div className="grid lg:grid-cols-2 gap-16">
-        <SpotlightCard title="Access Authorization" subtitle="Onboard new core administrators">
-          <form onSubmit={createAdmin} className="space-y-8 mt-6">
-            <PremiumInput label="Personnel Identity" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Operator Name" required />
-            <PremiumInput label="Registry Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} type="email" placeholder="user@local" required />
-            <PremiumInput label="Primary Secret" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} type="password" placeholder="••••••••" required />
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Clearance Level</label>
-              <select 
-                value={form.role} 
-                onChange={e=>setForm({...form,role:e.target.value})} 
-                className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-4 outline-none focus:bg-white focus:border-gray-900/20 font-semibold text-xs tracking-widest text-gray-800 transition-all uppercase"
-              >
-                <option value="admin">Operator (Level 1)</option>
-                <option value="superadmin">Commander (Level 2)</option>
-              </select>
-            </div>
-            <ShinyButton className="w-full" loading={loading} icon={UserPlus}>Authorize Personnel</ShinyButton>
-          </form>
-        </SpotlightCard>
-
-        <SpotlightCard title="Authorized Personnel" subtitle="Active security clearanced accounts">
-          <div className="space-y-6 max-h-[700px] overflow-auto pr-2 custom-scrollbar">
-            {admins.map(a=>(
-              <div key={a._id || a.id} className="flex justify-between items-center p-8 rounded-xl border border-gray-50 bg-[#fbfbfd] hover:border-gray-200 transition-all group shadow-sm hover:shadow-md">
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-xl bg-gray-900 text-white flex items-center justify-center font-semibold text-2xl shadow-xl">
-                    {a.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 text-lg tracking-tight uppercase leading-tight">{a.name}</h4>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.25em] mt-2">{a.role} • {a.email}</p>
-                  </div>
-                </div>
-                <button onClick={()=>setConfirmDelete({ open: true, id: a._id || a.id })} className="w-14 h-14 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all hover:scale-110"><Trash2 size={22} /></button>
+      {user?.role === 'superadmin' && (
+        <div className="grid lg:grid-cols-2 gap-16">
+          <SpotlightCard title="Access Authorization" subtitle="Onboard new core administrators">
+            <form onSubmit={createAdmin} className="space-y-8 mt-6">
+              <PremiumInput label="Personnel Identity" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Operator Name" required />
+              <PremiumInput label="Registry Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} type="email" placeholder="user@local" required />
+              <PremiumInput label="Primary Secret" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} type="password" placeholder="••••••••" required />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Clearance Level</label>
+                <select 
+                  value={form.role} 
+                  onChange={e=>setForm({...form,role:e.target.value})} 
+                  className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-4 outline-none focus:bg-white focus:border-gray-900/20 font-semibold text-xs tracking-widest text-gray-800 transition-all uppercase"
+                >
+                  <option value="admin">Operator (Level 1)</option>
+                  <option value="superadmin">Commander (Level 2)</option>
+                </select>
               </div>
-            ))}
-          </div>
-        </SpotlightCard>
-      </div>
+              <ShinyButton className="w-full" loading={loading} icon={UserPlus}>Authorize Personnel</ShinyButton>
+            </form>
+          </SpotlightCard>
+
+          <SpotlightCard title="Authorized Personnel" subtitle="Active security clearanced accounts">
+            <div className="space-y-6 max-h-[700px] overflow-auto pr-2 custom-scrollbar">
+              {admins.map(a=>(
+                <div key={a._id || a.id} className="flex justify-between items-center p-8 rounded-xl border border-gray-50 bg-[#fbfbfd] hover:border-gray-200 transition-all group shadow-sm hover:shadow-md">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-xl bg-gray-900 text-white flex items-center justify-center font-semibold text-2xl shadow-xl">
+                      {a.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 text-lg tracking-tight uppercase leading-tight">{a.name}</h4>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.25em] mt-2">{a.role} • {a.email}</p>
+                    </div>
+                  </div>
+                  <button onClick={()=>setConfirmDelete({ open: true, id: a._id || a.id })} className="w-14 h-14 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all hover:scale-110"><Trash2 size={22} /></button>
+                </div>
+              ))}
+            </div>
+          </SpotlightCard>
+        </div>
+      )}
 
       <SpotlightCard title="Global Registry" subtitle="Platform-wide identity metadata">
         <form onSubmit={saveSettings} className="space-y-12 mt-10">
@@ -2631,7 +2646,7 @@ const AdminApp = () => {
       <AnimatePresence>
         {toast && <Toast {...toast} onClose={() => setToast(null)} />}
       </AnimatePresence>
-      <AdminLayout onLogout={auth.logout} showToast={showToast} />
+      <AdminLayout onLogout={auth.logout} showToast={showToast} user={auth.user} />
     </div>
   );
 };
