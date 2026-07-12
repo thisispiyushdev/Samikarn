@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS public.donations (
   email TEXT NOT NULL,
   contact TEXT NOT NULL,
   amount NUMERIC NOT NULL,
+  pan_number TEXT,
   status TEXT DEFAULT 'Pending',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

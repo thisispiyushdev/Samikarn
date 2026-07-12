@@ -25,9 +25,9 @@ const getRazorpayInstance = () => {
 // @access  Public
 export const createOrder = async (req, res) => {
   try {
-    const { amount, name, email, contact } = req.body;
+    const { amount, name, email, contact, pan_number } = req.body;
 
-    if (!amount || !name || !email || !contact) {
+    if (!amount || !name || !email || !contact || !pan_number) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
@@ -46,7 +46,8 @@ export const createOrder = async (req, res) => {
       name,
       email,
       contact,
-      amount
+      amount,
+      pan_number
     }]);
 
     if (dbError) {
@@ -117,6 +118,28 @@ export const verifyPayment = async (req, res) => {
     }
   } catch (error) {
     console.error('Error verifying payment:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+// @desc    Get all donations
+// @route   GET /api/payment/donations
+// @access  Private
+export const getDonations = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('donations')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching donations:', error);
+      return res.status(500).json({ success: false, message: 'Failed to fetch donations' });
+    }
+
+    res.status(200).json({ success: true, donations: data });
+  } catch (error) {
+    console.error('Error fetching donations:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };

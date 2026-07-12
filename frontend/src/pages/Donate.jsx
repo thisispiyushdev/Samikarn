@@ -8,6 +8,7 @@ const Donate = () => {
     const [donorName, setDonorName] = React.useState('');
     const [donorEmail, setDonorEmail] = React.useState('');
     const [donorContact, setDonorContact] = React.useState('');
+    const [donorPan, setDonorPan] = React.useState('');
 
     const [programs, setPrograms] = React.useState([]);
 
@@ -33,8 +34,14 @@ const Donate = () => {
     };
 
     const handlePayment = async (amount) => {
-        if (!donorName || !donorEmail || !donorContact) {
-            alert('Please fill out all your contact details (Name, Email, Phone) before proceeding.');
+        if (!donorName || !donorEmail || !donorContact || !donorPan) {
+            alert('Please fill out all your details (Name, Email, Phone, PAN) before proceeding.');
+            return;
+        }
+
+        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        if (!panRegex.test(donorPan.toUpperCase())) {
+            alert('Please enter a valid PAN Card number (e.g. ABCDE1234F).');
             return;
         }
         setLoading(true);
@@ -51,7 +58,7 @@ const Donate = () => {
             const orderResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount, name: donorName, email: donorEmail, contact: donorContact }),
+                body: JSON.stringify({ amount, name: donorName, email: donorEmail, contact: donorContact, pan_number: donorPan.toUpperCase() }),
             });
             
             const orderData = await orderResponse.json();
@@ -140,7 +147,8 @@ const Donate = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                     <input type="text" placeholder="Full Name" value={donorName} onChange={e => setDonorName(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
                     <input type="email" placeholder="Email Address" value={donorEmail} onChange={e => setDonorEmail(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="tel" placeholder="Phone Number" value={donorContact} onChange={e => setDonorContact(e.target.value)} className="md:col-span-2 w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
+                    <input type="tel" placeholder="Phone Number" value={donorContact} onChange={e => setDonorContact(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
+                    <input type="text" placeholder="PAN Number" value={donorPan} onChange={e => setDonorPan(e.target.value.toUpperCase())} maxLength={10} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary uppercase" />
                 </div>
             </div>
 
