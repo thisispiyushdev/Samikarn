@@ -736,16 +736,6 @@ const AdminLayout = ({ onLogout, showToast, user }) => {
         </nav>
         
         <div className="mt-auto space-y-1 pt-4">
-           <Link to="#" className="group flex items-center justify-between px-3 py-2 rounded-md transition-all duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-               <div className="flex items-center gap-3">
-                   <ShieldCheck size={20} className="text-gray-500 group-hover:text-gray-700" strokeWidth={2} />
-                   <span className="text-[15px] font-medium">Support</span>
-               </div>
-               <div className="flex items-center gap-1.5 bg-green-50 text-green-700 px-2 py-0.5 rounded-full border border-green-200/50">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                  <span className="text-[11px] font-medium">Online</span>
-               </div>
-           </Link>
            <Link to="/" target="_blank" className="group flex items-center justify-between px-3 py-2 rounded-md transition-all duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900">
                <div className="flex items-center gap-3">
                    <ExternalLink size={20} className="text-gray-500 group-hover:text-gray-700" strokeWidth={2} />
