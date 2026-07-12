@@ -79,3 +79,25 @@ export const submitContactForm = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error. Please try again later.' });
   }
 };
+
+// @desc    Get all contact messages
+// @route   GET /api/contact
+// @access  Private
+export const getContacts = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('contacts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching contacts:', error);
+      return res.status(500).json({ success: false, message: 'Failed to fetch contacts' });
+    }
+
+    res.status(200).json({ success: true, contacts: data });
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};

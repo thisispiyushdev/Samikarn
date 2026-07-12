@@ -41,7 +41,8 @@ import {
   FileText,
   Megaphone,
   LayoutTemplate,
-  Heart
+  Heart,
+  Mailbox
 } from 'lucide-react';
 import { convertDriveLinkToDirect } from '../utils/googleDriveParser';
 import logo from '../assets/media/logo.webp';
@@ -500,9 +501,9 @@ const Donations = ({ showToast }) => {
   }, []);
 
   const filtered = donations.filter(d => 
-    d.name.toLowerCase().includes(search.toLowerCase()) || 
-    d.email.toLowerCase().includes(search.toLowerCase()) ||
-    (d.pan_number && d.pan_number.toLowerCase().includes(search.toLowerCase()))
+    (d.name || '').toLowerCase().includes(search.toLowerCase()) || 
+    (d.email || '').toLowerCase().includes(search.toLowerCase()) ||
+    (d.pan_number || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -568,6 +569,86 @@ const Donations = ({ showToast }) => {
   );
 };
 
+const Messages = ({ showToast }) => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(`${apiBase}/api/contact`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('admin_token')}` }
+      });
+      const data = await res.json();
+      if (data.success) setMessages(data.contacts);
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to load messages', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const filtered = messages.filter(m => 
+    (m.name || '').toLowerCase().includes(search.toLowerCase()) || 
+    (m.email || '').toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="relative group flex-1 w-full md:max-w-md">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input 
+            value={search} 
+            onChange={(e) => setSearch(e.target.value)} 
+            placeholder="Search Messages..." 
+            className="pl-12 pr-6 py-3 rounded-xl bg-white border border-gray-200 shadow-sm outline-none transition-all w-full font-medium text-gray-900" 
+          />
+        </div>
+      </div>
+
+      <SpotlightCard title="Contact Messages" subtitle="Messages received from the contact form">
+        {loading ? (
+          <div className="flex justify-center p-12"><RefreshCcw className="animate-spin text-gray-400" size={32} /></div>
+        ) : (
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left text-sm text-gray-500 whitespace-nowrap">
+              <thead className="text-xs uppercase bg-gray-50 text-gray-700">
+                <tr>
+                  <th className="px-6 py-4 font-bold rounded-tl-xl">Sender</th>
+                  <th className="px-6 py-4 font-bold">Subject</th>
+                  <th className="px-6 py-4 font-bold">Message</th>
+                  <th className="px-6 py-4 font-bold rounded-tr-xl">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {filtered.map(m => (
+                  <tr key={m.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-semibold text-gray-900">{m.name}</div>
+                      <div className="text-xs">{m.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{m.subject}</td>
+                    <td className="px-6 py-4 whitespace-pre-wrap min-w-[300px] text-gray-600">{m.message}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-400">
+                      {new Date(m.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SpotlightCard>
+    </div>
+  );
+};
+
 const AdminLayout = ({ onLogout, showToast, user }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -580,6 +661,7 @@ const AdminLayout = ({ onLogout, showToast, user }) => {
   const menuItems = [
     { path: '/admin', name: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/donations', name: 'Donations', icon: Heart },
+    { path: '/admin/messages', name: 'Messages', icon: Mailbox },
     { path: '/admin/projects', name: 'Projects', icon: FolderHeart },
     { path: '/admin/reports', name: 'Reporting', icon: FileText },
     { path: '/admin/announcements', name: 'Announcements', icon: Megaphone },
@@ -723,6 +805,7 @@ const AdminLayout = ({ onLogout, showToast, user }) => {
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Dashboard showToast={showToast} />} />
               <Route path="/donations" element={<Donations showToast={showToast} />} />
+              <Route path="/messages" element={<Messages showToast={showToast} />} />
               <Route path="/projects" element={<Projects showToast={showToast} />} />
               <Route path="/reports" element={<Reports showToast={showToast} />} />
               <Route path="/announcements" element={<Announcements showToast={showToast} />} />
