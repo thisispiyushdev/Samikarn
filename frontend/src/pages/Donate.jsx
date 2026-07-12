@@ -9,6 +9,8 @@ const Donate = () => {
     const [donorEmail, setDonorEmail] = React.useState('');
     const [donorContact, setDonorContact] = React.useState('');
     const [donorPan, setDonorPan] = React.useState('');
+    const [formErrors, setFormErrors] = React.useState({});
+    const [formMessage, setFormMessage] = React.useState({ type: '', text: '' });
 
     const [programs, setPrograms] = React.useState([]);
 
@@ -33,22 +35,38 @@ const Donate = () => {
         });
     };
 
-    const handlePayment = async (amount) => {
-        if (!donorName || !donorEmail || !donorContact || !donorPan) {
-            alert('Please fill out all your details (Name, Email, Phone, PAN) before proceeding.');
-            return;
+    const validateField = (name, value) => {
+        let error = '';
+        if (name === 'name' && !value.trim()) error = 'Name is required';
+        if (name === 'email' && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))) error = 'Valid email is required';
+        if (name === 'contact' && !value.trim()) error = 'Phone number is required';
+        if (name === 'pan') {
+            const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+            if (!value.trim()) error = 'PAN number is required';
+            else if (!panRegex.test(value.toUpperCase())) error = 'Invalid PAN format (e.g. ABCDE1234F)';
         }
+        setFormErrors(prev => ({ ...prev, [name]: error }));
+        return error;
+    };
 
-        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-        if (!panRegex.test(donorPan.toUpperCase())) {
-            alert('Please enter a valid PAN Card number (e.g. ABCDE1234F).');
+    const handlePayment = async (amount) => {
+        setFormMessage({ type: '', text: '' });
+        
+        const nameError = validateField('name', donorName);
+        const emailError = validateField('email', donorEmail);
+        const contactError = validateField('contact', donorContact);
+        const panError = validateField('pan', donorPan);
+
+        if (nameError || emailError || contactError || panError) {
+            setFormMessage({ type: 'error', text: 'Please fix the errors in your details before proceeding.' });
+            window.scrollTo({ top: 300, behavior: 'smooth' });
             return;
         }
         setLoading(true);
         const res = await loadRazorpayScript();
 
         if (!res) {
-            alert('Razorpay SDK failed to load. Are you online?');
+            setFormMessage({ type: 'error', text: 'Payment SDK failed to load. Are you online?' });
             setLoading(false);
             return;
         }
@@ -64,7 +82,7 @@ const Donate = () => {
             const orderData = await orderResponse.json();
             
             if (!orderData.success) {
-                alert('Server error. Please try again.');
+                setFormMessage({ type: 'error', text: 'Server error creating order. Please try again later.' });
                 setLoading(false);
                 return;
             }
@@ -96,9 +114,11 @@ const Donate = () => {
                     const verifyData = await verifyResponse.json();
 
                     if (verifyData.success) {
-                        alert('Payment Successful! Thank you for your donation.');
+                        setFormMessage({ type: 'success', text: 'Payment Successful! Thank you for your generous donation.' });
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
                     } else {
-                        alert('Payment verification failed. Please contact support.');
+                        setFormMessage({ type: 'error', text: 'Payment verification failed. Please contact support.' });
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
                     }
                 },
                 prefill: {
@@ -119,7 +139,8 @@ const Donate = () => {
 
         } catch (error) {
             console.error(error);
-            alert('Something went wrong. Please try again.');
+            setFormMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
+            window.scrollTo({ top: 300, behavior: 'smooth' });
         } finally {
             setLoading(false);
         }
@@ -142,13 +163,32 @@ const Donate = () => {
       <div className="container mx-auto px-4 -mt-10">
         <div className="bg-white p-8 rounded-xl shadow-xl max-w-4xl mx-auto border border-gray-100">
             
+            {formMessage.text && (
+                <div className={`mb-8 p-4 rounded-xl border font-medium flex items-center gap-3 ${formMessage.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
+                    {formMessage.type === 'success' ? <CheckCircle size={20} /> : <div className="w-5 h-5 rounded-full border-2 border-red-500 text-red-500 font-bold flex items-center justify-center text-xs">!</div>}
+                    {formMessage.text}
+                </div>
+            )}
+
             <div className="mb-10 p-6 bg-gray-50 rounded-xl border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">1. Your Details</h3>
                 <div className="grid md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Full Name" value={donorName} onChange={e => setDonorName(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="email" placeholder="Email Address" value={donorEmail} onChange={e => setDonorEmail(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="tel" placeholder="Phone Number" value={donorContact} onChange={e => setDonorContact(e.target.value)} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="text" placeholder="PAN Number" value={donorPan} onChange={e => setDonorPan(e.target.value.toUpperCase())} maxLength={10} className="w-full p-4 bg-white rounded-xl font-medium outline-none border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary uppercase" />
+                    <div>
+                        <input type="text" placeholder="Full Name" value={donorName} onChange={e => { setDonorName(e.target.value); validateField('name', e.target.value); }} className={`w-full p-4 bg-white rounded-xl font-medium outline-none border focus:ring-1 ${formErrors.name ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-primary focus:ring-primary'}`} />
+                        {formErrors.name && <p className="text-red-500 text-sm mt-1 px-1">{formErrors.name}</p>}
+                    </div>
+                    <div>
+                        <input type="email" placeholder="Email Address" value={donorEmail} onChange={e => { setDonorEmail(e.target.value); validateField('email', e.target.value); }} className={`w-full p-4 bg-white rounded-xl font-medium outline-none border focus:ring-1 ${formErrors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-primary focus:ring-primary'}`} />
+                        {formErrors.email && <p className="text-red-500 text-sm mt-1 px-1">{formErrors.email}</p>}
+                    </div>
+                    <div>
+                        <input type="tel" placeholder="Phone Number" value={donorContact} onChange={e => { setDonorContact(e.target.value); validateField('contact', e.target.value); }} className={`w-full p-4 bg-white rounded-xl font-medium outline-none border focus:ring-1 ${formErrors.contact ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-primary focus:ring-primary'}`} />
+                        {formErrors.contact && <p className="text-red-500 text-sm mt-1 px-1">{formErrors.contact}</p>}
+                    </div>
+                    <div>
+                        <input type="text" placeholder="PAN Number" value={donorPan} onChange={e => { setDonorPan(e.target.value.toUpperCase()); validateField('pan', e.target.value); }} maxLength={10} className={`w-full p-4 bg-white rounded-xl font-medium outline-none border uppercase focus:ring-1 ${formErrors.pan ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-primary focus:ring-primary'}`} />
+                        {formErrors.pan && <p className="text-red-500 text-sm mt-1 px-1">{formErrors.pan}</p>}
+                    </div>
                 </div>
             </div>
 
@@ -182,7 +222,7 @@ const Donate = () => {
                 <button 
                     onClick={() => {
                         if (customAmount && customAmount > 0) handlePayment(customAmount);
-                        else alert("Please enter a valid amount");
+                        else setFormMessage({ type: 'error', text: 'Please enter a valid amount' });
                     }}
                     disabled={loading}
                     className="w-full md:w-auto px-12 py-4 bg-secondary text-gray-900 font-bold text-xl rounded-full shadow-lg hover:brightness-90 hover:shadow-secondary/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"

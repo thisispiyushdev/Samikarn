@@ -135,7 +135,7 @@ const Contact = () => {
                         name="firstName" 
                         value={formData.firstName}
                         onChange={(val) => setFormData({ ...formData, firstName: val })}
-                        placeholder="John" 
+                        placeholder="e.g. Your First Name" 
                         isRequired
                     />
                     <Input 
@@ -143,7 +143,7 @@ const Contact = () => {
                         name="lastName" 
                         value={formData.lastName}
                         onChange={(val) => setFormData({ ...formData, lastName: val })}
-                        placeholder="Doe" 
+                        placeholder="e.g. Your Last Name" 
                         isRequired
                     />
                  </div>
@@ -154,7 +154,7 @@ const Contact = () => {
                      type="email"
                      value={formData.email}
                      onChange={(val) => setFormData({ ...formData, email: val })}
-                     placeholder="john@example.com" 
+                     placeholder="e.g. you@example.com" 
                      isRequired
                  />
 
