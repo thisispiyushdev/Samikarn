@@ -487,7 +487,11 @@ const Donations = ({ showToast }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem('admin_token')}` }
       });
       const data = await res.json();
-      if (data.success) setDonations(data.donations);
+      if (data.success) {
+        setDonations(data.donations);
+      } else {
+        showToast(data.message || 'Failed to fetch donations', 'error');
+      }
     } catch (err) {
       console.error(err);
       showToast('Failed to load donations', 'error');
@@ -580,7 +584,11 @@ const Messages = ({ showToast }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem('admin_token')}` }
       });
       const data = await res.json();
-      if (data.success) setMessages(data.contacts);
+      if (data.success) {
+        setMessages(data.contacts);
+      } else {
+        showToast(data.message || 'Failed to fetch messages', 'error');
+      }
     } catch (err) {
       console.error(err);
       showToast('Failed to load messages', 'error');
