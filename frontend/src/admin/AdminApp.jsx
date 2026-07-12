@@ -381,20 +381,20 @@ const Login = ({ onLogin }) => {
       >
         <div className="flex flex-col items-center mb-12">
           <motion.div 
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.8 }}
-            className="w-20 h-20 rounded-xl bg-gray-900 flex items-center justify-center shadow-2xl mb-8"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6"
           >
-            <ShieldCheck size={40} className="text-white" />
+            <img src={logo} alt="Samikaran Logo" className="h-28 w-auto object-contain drop-shadow-sm" />
           </motion.div>
-          <h1 className="text-4xl font-bold text-gray-900">SAMIKARAN</h1>
-          <p className="text-gray-400 font-semibold mt-3 uppercase tracking-[0.3em] text-[10px]">Security Control Panel</p>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>
+          <p className="text-gray-500 font-medium mt-2 text-sm">Sign in to manage Samikaran</p>
         </div>
         
         <SpotlightCard className="p-12">
           <form onSubmit={submit} className="space-y-8">
             <PremiumInput 
-              label="Operator Identifier"
+              label="Email Address"
               icon={Mail}
               value={email} 
               onChange={e=>setEmail(e.target.value)} 
@@ -403,7 +403,7 @@ const Login = ({ onLogin }) => {
               required 
             />
             <PremiumInput 
-              label="Encrypted Access Key"
+              label="Password"
               icon={ShieldCheck}
               value={password} 
               onChange={e=>setPassword(e.target.value)} 
@@ -426,14 +426,14 @@ const Login = ({ onLogin }) => {
               )}
             </AnimatePresence>
             
-            <ShinyButton className="w-full py-5 text-lg" loading={loading}>
-              Authorize Access
+            <ShinyButton className="w-full py-5 text-lg font-bold" loading={loading}>
+              Sign In
             </ShinyButton>
           </form>
           
           <div className="mt-10 pt-10 border-t border-gray-50 text-center">
-            <Link to="/admin/bootstrap" className="text-xs font-semibold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">
-              Initialize Local Core Environment →
+            <Link to="/admin/bootstrap" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+              First time setup? Initialize Database
             </Link>
           </div>
         </SpotlightCard>

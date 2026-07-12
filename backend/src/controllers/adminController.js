@@ -11,13 +11,13 @@ export const login = async (req, res) => {
     const { data: user, error } = await supabase.from('admins').select('*').eq('email', email).single();
     if (error || !user) {
       if (error && error.code === 'PGRST116') {
-        return res.status(400).json({ success: false, message: 'Account not found. Click "Initialize Local Core Environment" below if this is a new setup.' });
+        return res.status(400).json({ success: false, message: 'Invalid email or password' });
       }
-      return res.status(400).json({ success: false, message: 'Invalid credentials' });
+      return res.status(400).json({ success: false, message: 'Invalid email or password' });
     }
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
-      return res.status(400).json({ success: false, message: 'Invalid credentials' });
+      return res.status(400).json({ success: false, message: 'Invalid email or password' });
     }
     const secret = process.env.JWT_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev_secret' : '');
     const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: '7d' });
