@@ -62,14 +62,18 @@ export const submitContactForm = async (req, res) => {
 
     try {
       if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-        await transporter.sendMail(adminMailOptions);
-        await transporter.sendMail(userMailOptions);
-        console.log('Emails sent successfully');
+        // Fire and forget email sending to not block the API response
+        Promise.all([
+          transporter.sendMail(adminMailOptions),
+          transporter.sendMail(userMailOptions)
+        ])
+        .then(() => console.log('Emails sent successfully in the background'))
+        .catch(emailError => console.error('Email sending failed in background:', emailError));
       } else {
         console.log('Skipping email sending: Missing EMAIL_USER or EMAIL_PASS in .env');
       }
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+    } catch (error) {
+      console.error('Error dispatching emails:', error);
     }
 
     res.status(201).json({ success: true, message: 'Message sent successfully!' });
