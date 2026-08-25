@@ -1,0 +1,16 @@
+# Samikaran NGO
+
+Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth, especially from underserved communities.
+
+## Core Pages
+- [About Us](/about)
+- [Projects & Impact](/projects)
+- [Media Presence](/media)
+- [Donate & Support](/donate)
+- [Contact Us](/contact)
+
+## Mission
+Providing communication and professional skills to build confidence in underserved communities.
+
+## Vision
+To build an able society where every individual leads a life of purpose.
