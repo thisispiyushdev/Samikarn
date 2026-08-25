@@ -15,6 +15,46 @@ const Donate = () => {
     const [programs, setPrograms] = React.useState([]);
 
     React.useEffect(() => {
+        // --- Security Measures ---
+        // 1. Disable right-click
+        const handleContextMenu = (e) => e.preventDefault();
+        document.addEventListener('contextmenu', handleContextMenu);
+
+        // 2. Disable dev tools keyboard shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        const handleKeyDown = (e) => {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) || 
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u'))) {
+                e.preventDefault();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 3. Clear console and override to prevent logging sensitive details
+        const noop = () => {};
+        const originalConsole = { ...console };
+        console.log = noop;
+        console.warn = noop;
+        console.error = noop;
+        console.info = noop;
+        console.table = noop;
+        setTimeout(originalConsole.clear, 10); // Clear on mount
+
+        // 4. Ensure session storage doesn't hold anything sensitive from this page
+        sessionStorage.clear();
+
+        return () => {
+            document.removeEventListener('contextmenu', handleContextMenu);
+            document.removeEventListener('keydown', handleKeyDown);
+            console.log = originalConsole.log;
+            console.warn = originalConsole.warn;
+            console.error = originalConsole.error;
+            console.info = originalConsole.info;
+            console.table = originalConsole.table;
+        };
+    }, []);
+
+    React.useEffect(() => {
         fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/causes`)
             .then(res => res.json())
             .then(data => {
@@ -22,7 +62,7 @@ const Donate = () => {
                     setPrograms(data.causes.filter(c => c.is_active));
                 }
             })
-            .catch(err => console.error("Error fetching causes:", err));
+            .catch(() => {});
     }, []);
 
     const loadRazorpayScript = () => {
@@ -138,7 +178,6 @@ const Donate = () => {
             paymentObject.open();
 
         } catch (error) {
-            console.error(error);
             setFormMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
             window.scrollTo({ top: 300, behavior: 'smooth' });
         } finally {
