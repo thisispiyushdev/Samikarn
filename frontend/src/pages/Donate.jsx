@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, CreditCard, Gift, CheckCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const Donate = () => {
     const [customAmount, setCustomAmount] = React.useState('');
@@ -187,6 +188,11 @@ const Donate = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen pb-20">
+      <SEO 
+        title="Donate - Samikaran" 
+        description="Make a difference. 100% of your donation goes directly to the cause." 
+        path="/donate" 
+      />
       {/* Header */}
       <div className="bg-primary text-white py-16 text-center rounded-b-[3rem] shadow-xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-black/10" />
@@ -260,8 +266,8 @@ const Donate = () => {
                 
                 <button 
                     onClick={() => {
-                        if (customAmount && customAmount > 0) handlePayment(customAmount);
-                        else setFormMessage({ type: 'error', text: 'Please enter a valid amount' });
+                        if (customAmount && customAmount >= 99) handlePayment(customAmount);
+                        else setFormMessage({ type: 'error', text: 'Please enter a valid amount (Minimum ₹99)' });
                     }}
                     disabled={loading}
                     className="w-full md:w-auto px-12 py-4 bg-secondary text-gray-900 font-bold text-xl rounded-full shadow-lg hover:brightness-90 hover:shadow-secondary/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"

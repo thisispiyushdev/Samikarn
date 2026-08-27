@@ -10,6 +10,7 @@ import HeroSection from '../components/sections/HeroSection';
 import ImpactStats from '../components/sections/ImpactStats';
 import LiveProjects from '../components/sections/LiveProjects';
 import Testimonials from '../components/sections/Testimonials';
+import SEO from '../components/SEO';
 import DepthBlurCarousel from '../components/sections/DepthBlurCarousel';
 import Snap3DCarousel from '../components/sections/Snap3DCarousel';
 
@@ -73,6 +74,11 @@ const Home = () => {
 
   return (
     <div className="bg-white">
+      <SEO 
+        title="Samikaran - Home" 
+        description="Samikaran is a social initiative focused on building communication, confidence, and professional skills among students and youth." 
+        path="/" 
+      />
       {/* Hero Section */}
       <HeroSection />
 

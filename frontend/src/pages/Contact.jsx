@@ -5,6 +5,7 @@ import { TextArea } from '@/components/base/textarea/textarea';
 import { Button } from '@/components/base/buttons/button';
 import { Select } from '@/components/base/select/select';
 import { cachedFetch } from '../utils/cachedFetch';
+import SEO from '../components/SEO';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -73,6 +74,11 @@ const Contact = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen py-12">
+      <SEO 
+        title="Contact Us - Samikaran" 
+        description="Get in touch with Samikaran. We'd love to hear from you." 
+        path="/contact" 
+      />
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">

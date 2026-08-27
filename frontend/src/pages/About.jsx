@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Target, Globe, ShieldCheck, Users, ArrowRight, BookOpen, Briefcase, Activity, Flag, Sunrise, Zap, Compass, Star, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import storyImg1 from '../assets/media/about_story1.webp';
 import storyImg2 from '../assets/media/about_story2.webp';
 
@@ -72,6 +73,11 @@ const About = () => {
 
   return (
     <div className="bg-white min-h-screen">
+      <SEO 
+        title="About Us - Samikaran" 
+        description="Learn about Samikaran, our story, mission, and vision to build an able society." 
+        path="/about" 
+      />
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
