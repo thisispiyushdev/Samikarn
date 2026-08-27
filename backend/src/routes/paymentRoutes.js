@@ -1,6 +1,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { createOrder, verifyPayment, getRazorpayKey, getDonations } from '../controllers/paymentController.js';
+import { createOrder, verifyPayment, getRazorpayKey, getDonations, recordPaymentFailure } from '../controllers/paymentController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -16,6 +16,7 @@ const paymentLimiter = rateLimit({
 
 router.post('/order', paymentLimiter, createOrder);
 router.post('/verify', paymentLimiter, verifyPayment);
+router.post('/failure', paymentLimiter, recordPaymentFailure);
 router.get('/key', getRazorpayKey);
 router.get('/donations', requireAuth, getDonations);
 

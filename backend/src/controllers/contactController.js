@@ -105,3 +105,27 @@ export const getContacts = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+// @desc    Add automated test contact data
+// @route   POST /api/contact/test-cron
+// @access  Public
+export const addTestContact = async (req, res) => {
+  try {
+    const { error: dbError } = await supabase.from('contacts').insert([{
+      name: 'System Test User',
+      email: 'test@system.local',
+      subject: 'Automated 5-day Test',
+      message: 'This is an automatically generated test data for monitoring purposes.',
+    }]);
+
+    if (dbError) {
+      console.error('Supabase Error:', dbError);
+      return res.status(500).json({ success: false, message: 'Database Error. Please try again later.' });
+    }
+
+    res.status(201).json({ success: true, message: 'Test contact data added successfully!' });
+  } catch (error) {
+    console.error('Test Contact Error:', error);
+    res.status(500).json({ success: false, message: 'Server Error. Please try again later.' });
+  }
+};

@@ -106,10 +106,26 @@ export const verifyPayment = async (req, res) => {
         paymentId: razorpay_payment_id,
       });
     } else {
-      // If signature is invalid, mark as spoofed/failed just in case.
-      await supabase.from('donations')
-        .update({ status: 'Failed' })
-        .eq('razorpay_order_id', razorpay_order_id);
+      // If signature is invalid, fetch from donations
+      const { data: donationData } = await supabase.from('donations')
+        .select('*')
+        .eq('razorpay_order_id', razorpay_order_id)
+        .single();
+        
+      if (donationData) {
+        // Insert into failed_donations
+        await supabase.from('failed_donations').insert([{
+          razorpay_order_id: donationData.razorpay_order_id,
+          name: donationData.name,
+          email: donationData.email,
+          contact: donationData.contact,
+          amount: donationData.amount,
+          pan_number: donationData.pan_number,
+          reason: 'Invalid signature',
+        }]);
+        // Delete from donations
+        await supabase.from('donations').delete().eq('razorpay_order_id', razorpay_order_id);
+      }
 
       res.status(400).json({
         success: false,
@@ -140,6 +156,44 @@ export const getDonations = async (req, res) => {
     res.status(200).json({ success: true, donations: data });
   } catch (error) {
     console.error('Error fetching donations:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+// @desc    Record failed payment
+// @route   POST /api/payment/failure
+// @access  Public
+export const recordPaymentFailure = async (req, res) => {
+  try {
+    const { razorpay_order_id, reason } = req.body;
+    
+    if (!razorpay_order_id) {
+      return res.status(400).json({ success: false, message: 'Order ID is required' });
+    }
+
+    const { data: donationData } = await supabase.from('donations')
+      .select('*')
+      .eq('razorpay_order_id', razorpay_order_id)
+      .single();
+
+    if (donationData) {
+      // Insert into failed_donations
+      await supabase.from('failed_donations').insert([{
+        razorpay_order_id: donationData.razorpay_order_id,
+        name: donationData.name,
+        email: donationData.email,
+        contact: donationData.contact,
+        amount: donationData.amount,
+        pan_number: donationData.pan_number,
+        reason: reason || 'User closed checkout or payment failed',
+      }]);
+      // Delete from donations
+      await supabase.from('donations').delete().eq('razorpay_order_id', razorpay_order_id);
+    }
+
+    res.status(200).json({ success: true, message: 'Failure recorded' });
+  } catch (error) {
+    console.error('Error recording failure:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };

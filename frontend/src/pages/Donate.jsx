@@ -170,12 +170,36 @@ const Donate = () => {
                 notes: {
                     address: "Samikaran Office"
                 },
+                modal: {
+                    ondismiss: function() {
+                        fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/failure`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: orderData.order.id,
+                                reason: 'User closed payment window'
+                            }),
+                        });
+                        setFormMessage({ type: 'error', text: 'Payment cancelled by user.' });
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }
+                },
                 theme: {
                     color: "#F37254"
                 }
             };
 
             const paymentObject = new window.Razorpay(options);
+            paymentObject.on('payment.failed', function (response){
+                fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/payment/failure`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.error.metadata.order_id,
+                        reason: response.error.description
+                    }),
+                });
+            });
             paymentObject.open();
 
         } catch (error) {
