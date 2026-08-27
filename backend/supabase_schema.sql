@@ -89,6 +89,20 @@ CREATE TABLE IF NOT EXISTS public.donations (
 
 ALTER TABLE public.donations DISABLE ROW LEVEL SECURITY;
 
+CREATE TABLE IF NOT EXISTS public.failed_donations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  razorpay_order_id TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  contact TEXT NOT NULL,
+  amount NUMERIC NOT NULL,
+  pan_number TEXT,
+  reason TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.failed_donations DISABLE ROW LEVEL SECURITY;
+
 CREATE TABLE IF NOT EXISTS public.reports (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
