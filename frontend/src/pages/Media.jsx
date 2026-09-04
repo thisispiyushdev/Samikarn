@@ -16,7 +16,7 @@ const Media = () => {
       cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/announcements`).then(r => r.json())
     ]).then(([mediaRes, annRes]) => {
       if (mediaRes.success && mediaRes.media) {
-        setMediaItems(mediaRes.media.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        setMediaItems(mediaRes.media.filter(m => m.type !== 'image').sort((a, b) => new Date(b.date) - new Date(a.date)));
       }
       if (annRes.success && annRes.announcements) {
         const ann = annRes.announcements.map(a => ({
@@ -107,7 +107,7 @@ const Media = () => {
       {/* Filter & Search Bar */}
       <section className="py-12 border-b border-gray-100 bg-white sticky top-0 z-30 shadow-sm">
         <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8 items-center justify-between">
-          <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto custom-scrollbar">
+          <div className="flex gap-4 overflow-x-auto overflow-y-hidden pb-4 md:pb-3 w-full md:w-auto custom-scrollbar">
             {uniqueCategories.map(t => (
               <button 
                 key={t}
@@ -157,7 +157,7 @@ const Media = () => {
                     }}
                   >
                     <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
-                      <img 
+                      <img loading="lazy" 
                         src={item.mainImage} 
                         alt={item.title} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -205,7 +205,7 @@ const Media = () => {
                   }}
                 >
                   <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 relative">
-                    <img 
+                    <img loading="lazy" 
                       src={item.mainImage} 
                       alt={item.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -221,9 +221,12 @@ const Media = () => {
                       <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors">{item.title}</h4>
                       <p className="text-gray-500 mt-1 line-clamp-2">{item.description}</p>
                     </div>
-                    <div className="shrink-0 ml-4 border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
-                      {(new Date(item.date).getFullYear() || new Date().getFullYear())}
-                    </div>
+                    <div className="shrink-0 ml-4 flex flex-col items-end gap-1">
+                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">{item.type}</span>
+                          <div className="border border-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-900">
+                            {(new Date(item.date).getFullYear() || new Date().getFullYear())}
+                          </div>
+                        </div>
                   </div>
                 </motion.div>
               ))}
@@ -273,7 +276,7 @@ const Media = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                    transition={{ type: "tween", ease: "easeOut", duration: 0.3 }}
                     style={{ borderRadius: 16 }}
                     src={selectedItem.mainImage} 
                     className="w-full h-auto max-h-[50vh] md:max-h-[70vh] object-contain shadow-2xl"

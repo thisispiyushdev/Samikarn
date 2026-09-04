@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-r
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { compressAndConvertToBase64 } from '../utils/imageCompression';
 import { 
   LayoutDashboard, 
   FolderHeart, 
@@ -237,7 +238,7 @@ const Toast = ({ message, type = 'success', onClose }) => {
 const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, loading }) => (
   <AnimatePresence>
     {isOpen && (
-      <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+      <div className="fixed inset-y-0 right-0 left-0 md:left-[280px] z-[110] flex items-center justify-center p-6 h-[100dvh]">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -280,7 +281,7 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, loading }) 
 const FormModal = ({ isOpen, title, onClose, children }) => (
   <AnimatePresence>
     {isOpen && (
-      <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6">
+      <div className="fixed inset-y-0 right-0 left-0 md:left-[280px] z-[110] flex items-center justify-center p-4 md:p-6 h-[100dvh]">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -292,7 +293,7 @@ const FormModal = ({ isOpen, title, onClose, children }) => (
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="relative w-full max-w-3xl bg-white rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto custom-scrollbar"
+          className="relative w-full max-w-3xl bg-white rounded-2xl p-4 md:p-8 shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto custom-scrollbar"
         >
           <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
             <h3 className="text-xl font-bold text-gray-900">{title}</h3>
@@ -777,7 +778,7 @@ const AdminLayout = ({ onLogout, showToast, user }) => {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-8 md:gap-0"
+            className="sticky top-0 z-30 bg-gray-50/90 backdrop-blur-md pt-4 md:pt-6 pb-2 -mt-6 md:-mt-10 -mx-6 md:-mx-10 px-6 md:px-10 flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-2 md:gap-0 border-b border-gray-200"
           >
             <div>
               <p className="text-gray-400 font-semibold uppercase tracking-[0.3em] text-[10px] mb-2 md:mb-3">Management Engine v4.0</p>
@@ -875,10 +876,7 @@ const Dashboard = ({ showToast }) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Overview of your NGO</p>
-        </div>
+        
         <button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95">
           <RefreshCcw size={16} /> Refresh
         </button>
@@ -886,7 +884,7 @@ const Dashboard = ({ showToast }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {metrics.map((m, i) => (
           <SpotlightCard key={i} delay={i * 0.1}>
-            <div className="flex items-center justify-between mb-4"><div><h2 className="text-2xl font-bold text-gray-900">Dashboard</h2><p className="text-gray-500 font-medium text-sm mt-1">Overview of your NGO</p></div><button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95"><RefreshCcw size={16} /> Refresh</button></div>
+            <div className="flex items-center justify-between mb-4"><div></div><button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95"><RefreshCcw size={16} /> Refresh</button></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", m.color)}>
                 <m.icon size={24} />
@@ -1101,10 +1099,7 @@ const Projects = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Projects</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Manage project records</p>
-        </div>
+        
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
@@ -1157,12 +1152,12 @@ const Projects = ({ showToast }) => {
                             const file = e.target.files[0];
                             if (file) {
                                 
-                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})) }).catch(err => console.error('Compression failed', err));
+                                const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, image: tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                     />
-                    {form.image && <img src={form.image} alt="Preview" className="h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200" />}
+                    {form.image && <img src={form.image} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200")} />}
                   </div>
                   
                   <div className="space-y-2">
@@ -1178,7 +1173,7 @@ const Projects = ({ showToast }) => {
                             const newGallery = [...form.gallery];
                             files.forEach(file => {
                                 
-                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, gallery: [...prev.gallery,base64]})); }).catch(err => console.error('Compression failed', err));
+                                const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, gallery: [...prev.gallery,tempUrl]})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, gallery: [...prev.gallery,base64]})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                             });
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -1246,7 +1241,7 @@ const Projects = ({ showToast }) => {
         )}
       </AnimatePresence>
 
-      <div className="grid sm:grid-cols-2 gap-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((p, i)=>(
             <motion.div 
@@ -1418,10 +1413,7 @@ const Reports = ({ showToast }) => {
         loading={loading}
       />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-gray-100">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Impact Reports</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Archive Records</p>
-        </div>
+        
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
@@ -1451,12 +1443,12 @@ const Reports = ({ showToast }) => {
                             const file = e.target.files[0];
                             if (file) {
                                 
-                                compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})) }).catch(err => console.error('Compression failed', err));
+                                const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, media: tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                             }
                         }}
                         className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                     />
-                    {form.media && <img src={form.media} alt="Preview" className="h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200" />}
+                    {form.media && <img src={form.media} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200")} />}
                   </div>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
@@ -1491,7 +1483,7 @@ const Reports = ({ showToast }) => {
                 </div>
               </form>
           </FormModal>
-      <div className="grid sm:grid-cols-2 gap-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((p, i)=>(
             <motion.div key={p._id || p.id} layout className="bg-white rounded-xl border border-gray-100 shadow-xl overflow-hidden p-8">
@@ -1574,10 +1566,7 @@ const Announcements = ({ showToast }) => {
     <div className="space-y-12">
       <ConfirmModal isOpen={confirmDelete.open} title="Purge Record?" message="Confirm permanent deletion." onConfirm={remove} onCancel={() => setConfirmDelete({ open: false, id: null })} loading={loading}/>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-gray-100">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Future Updates</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Archive Records</p>
-        </div>
+        
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
@@ -1609,12 +1598,12 @@ const Announcements = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                               
-                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})) }).catch(err => console.error('Compression failed', err));
+                              const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, media: tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, media: base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                           }
                       }}
                       className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-6 py-[13px] outline-none text-xs font-bold text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                   />
-                  {form.media && <img src={form.media} alt="Preview" className="h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200" />}
+                  {form.media && <img src={form.media} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200")} />}
                 </div>
                 <div className="space-y-2"><textarea value={form.description} onChange={e=>setForm({...form,description:e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-6 h-32 focus:bg-white" placeholder="Content..."/></div>
                 <div className="flex gap-4"><ShinyButton className="flex-1" loading={loading}>{editingId?"Update":"Post"}</ShinyButton></div>
@@ -1698,10 +1687,7 @@ const Subscribers = ({ showToast }) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Newsletter Audience</h2>
-          <p className="text-gray-500 font-medium text-sm mt-1">Authenticated Subscriber Database</p>
-        </div>
+        
         <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
           <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
           <div className="relative group flex-1 md:flex-none">
@@ -2100,12 +2086,12 @@ const GalleryAdmin = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                               
-                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})) }).catch(err => console.error('Compression failed', err));
+                              const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, image: tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, image: base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
                   />
-                  {form.image && <img src={form.image} alt="Preview" className="h-32 w-auto object-cover rounded-xl mt-2 border border-gray-200" />}
+                  {form.image && <img src={form.image} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-20 w-32 object-cover rounded-xl mt-2 border border-gray-200")} />}
                 </div>
 
                 <div className="flex gap-4">
@@ -2116,7 +2102,7 @@ const GalleryAdmin = ({ showToast }) => {
               </form>
           </FormModal>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((m)=>(
             <motion.div 
@@ -2148,6 +2134,232 @@ const GalleryAdmin = ({ showToast }) => {
     </div>
   );
 };
+
+
+const MediaPostsManager = ({ showToast }) => {
+  const [items, setItems] = useState([]);
+  const [form, setForm] = useState({ title:'', type:'News', description:'', mainImage:'', date: new Date().toISOString().split('T')[0], link:'' });
+  const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const token = localStorage.getItem('admin_token') || '';
+
+  const load = async () => {
+    try {
+      const res = await fetch(`${apiBase}/api/media`);
+      const data = await res.json();
+      if (data.success) setItems(data.media);
+    } catch (err) {
+      showToast('Failed to load media archive', 'error');
+    }
+  };
+  useEffect(()=>{ load(); },[]);
+
+  const filteredItems = items.filter(m => 
+    m.type !== 'image' && m.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const payload = { ...form, gallery: [] };
+      const url = editingId ? `${apiBase}/api/media/${editingId}` : `${apiBase}/api/media`;
+      const method = editingId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) { 
+        showToast(editingId ? 'Media Post updated' : 'Media Post added successfully');
+        setForm({ title:'', type:'News', description:'', mainImage:'', date: new Date().toISOString().split('T')[0], link:'' }); 
+        setEditingId(null);
+        load(); 
+        setIsFormOpen(false);
+      } else {
+        showToast(data.message || 'Operation failed', 'error');
+      }
+    } catch (err) {
+      showToast('Connection error', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startEdit = (m) => {
+    setEditingId(m._id || m.id);
+    setForm({
+      title: m.title || '',
+      type: m.type || 'News',
+      description: m.description || '',
+      mainImage: m.mainImage || m.url || '',
+      date: m.date ? m.date.split('T')[0] : new Date().toISOString().split('T')[0],
+      link: m.link || ''
+    });
+    setIsFormOpen(true);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm({ title:'', type:'News', description:'', mainImage:'', date: new Date().toISOString().split('T')[0], link:'' });
+    setIsFormOpen(false);
+  };
+
+  const remove = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/media/${confirmDelete.id}`, { 
+        method:'DELETE', 
+        headers:{ Authorization: `Bearer ${token}` } 
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Media post removed');
+        setConfirmDelete({ open: false, id: null });
+        load();
+      }
+    } catch (err) {
+      showToast('Failed to remove entry', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <ConfirmModal 
+        isOpen={confirmDelete.open} 
+        title="Remove Media Post?" 
+        message="This will permanently delete this media post." 
+        onConfirm={remove} 
+        onCancel={() => setConfirmDelete({ open: false, id: null })} 
+        loading={loading}
+      />
+
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <button onClick={() => { setLoading(true); load(); }} className="flex-none p-3 rounded-full bg-white border border-gray-100 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95" title="Refresh"><RefreshCcw size={18} /></button>
+        <div className="relative group flex-1 w-full md:max-w-md">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={18} />
+          <input 
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search Media Posts..." 
+            className="pl-12 pr-6 py-3 rounded-xl bg-white border border-gray-200 shadow-sm outline-none transition-all w-full font-medium text-gray-900" 
+          />
+        </div>
+        <ShinyButton 
+          onClick={() => setIsFormOpen(!isFormOpen)} 
+          variant={isFormOpen ? "danger" : "primary"}
+          className="rounded-xl px-6 py-3"
+        >
+          {isFormOpen ? "Cancel" : "Add Media Post"}
+        </ShinyButton>
+      </div>
+
+      <FormModal isOpen={isFormOpen} title={editingId ? "Edit Media Post" : "Add Media Post"} onClose={cancelEdit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <PremiumInput label="Title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Post title" required />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Category</label>
+              <select 
+                value={form.type}
+                onChange={e=>setForm({...form,type:e.target.value})}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
+              >
+                <option value="News">News</option>
+                <option value="Event">Event</option>
+                <option value="Award">Award</option>
+                <option value="Press Release">Press Release</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <PremiumInput label="External Link (Optional)" value={form.link} onChange={e=>setForm({...form,link:e.target.value})} placeholder="https://..." />
+            <PremiumInput label="Date" type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} required />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Description</label>
+            <textarea 
+              value={form.description} 
+              onChange={e=>setForm({...form,description:e.target.value})} 
+              placeholder="Short description..." 
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800 h-24 resize-none" 
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700 ml-1 mb-1 block">Upload Image</label>
+            <input 
+                type="file" 
+                accept="image/*"
+                onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, mainImage:tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, mainImage:base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
+                    }
+                }}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
+            />
+            {form.mainImage && <img src={form.mainImage} alt="Preview" className="h-32 w-48 object-cover rounded-xl mt-2 border border-gray-200" />}
+          </div>
+
+          <ShinyButton type="submit" className="w-full rounded-xl py-4" disabled={loading}>
+            {loading ? 'Saving...' : (editingId ? 'Save Changes' : 'Publish Media Post')}
+          </ShinyButton>
+        </form>
+      </FormModal>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <AnimatePresence>
+          {filteredItems.map((m, i) => (
+            <motion.div 
+              key={m._id || m.id || i}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all"
+            >
+              <div className="aspect-[4/3] bg-gray-100 relative">
+                {m.mainImage || m.url ? (
+                  <img src={m.mainImage || m.url} alt={m.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-200"><ImageIcon size={32} /></div>
+                )}
+                <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold text-gray-900 uppercase shadow-sm">
+                  {m.type}
+                </div>
+              </div>
+              <div className="p-4">
+                <h4 className="font-bold text-gray-900 line-clamp-1">{m.title}</h4>
+                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{m.description}</p>
+                <div className="mt-4 flex gap-2">
+                  <button onClick={() => startEdit(m)} className="flex-1 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors">Edit</button>
+                  <button onClick={() => setConfirmDelete({ open: true, id: m._id || m.id })} className="flex-1 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">Delete</button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+      {filteredItems.length === 0 && (
+        <div className="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
+          <ImageIcon className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+          <p className="text-gray-500 font-medium">No media posts found</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 const CarouselManager = ({ showToast }) => {
   const [items, setItems] = useState([]);
@@ -2295,12 +2507,12 @@ const CarouselManager = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                                // 2MB limit
-                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, mainImage:base64, url: base64})) }).catch(err => console.error('Compression failed', err));
+                              const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, mainImage:tempUrl, url: tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, mainImage:base64, url: base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
                   />
-                  {form.mainImage && <img src={form.mainImage} alt="Preview" className="h-32 w-auto object-cover rounded-xl mt-2 border border-gray-200" />}
+                  {form.mainImage && <img src={form.mainImage} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-32 w-auto object-cover rounded-xl mt-2 border border-gray-200")} />}
                 </div>
 
                 <div className="flex gap-4">
@@ -2311,7 +2523,7 @@ const CarouselManager = ({ showToast }) => {
               </form>
           </FormModal>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((m)=>(
             <motion.div 
@@ -2488,28 +2700,18 @@ const TestimonialsAdmin = ({ showToast }) => {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700 block mb-1">Avatar Image (Optional)</label>
-                  <div className="flex gap-2 mb-2">
-                    <button 
-                      type="button"
-                      onClick={() => setForm({...form, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'})}
-                      className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium border border-blue-100 hover:bg-blue-100"
-                    >
-                      👦 Male Avatar
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => setForm({...form, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia'})}
-                      className="px-3 py-1 bg-pink-50 text-pink-600 rounded-lg text-xs font-medium border border-pink-100 hover:bg-pink-100"
-                    >
-                      👩 Female Avatar
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => setForm({...form, avatar: ''})}
-                      className="px-3 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-medium border border-gray-100 hover:bg-gray-100"
-                    >
-                      Clear
-                    </button>
+                  <div className="flex flex-wrap items-center gap-3 mb-3">
+                    {['Mia', 'Felix', 'Alex', 'Sam', 'Jordan', 'Taylor'].map(seed => (
+                      <button
+                        key={seed}
+                        type="button"
+                        onClick={() => setForm({...form, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`})}
+                        className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-all hover:scale-110 ${form.avatar?.includes(seed) ? 'border-indigo-600 shadow-md ring-2 ring-indigo-100 scale-110' : 'border-gray-200 hover:border-gray-300'}`}
+                      >
+                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`} alt={seed} className="w-full h-full bg-gray-50" />
+                      </button>
+                    ))}
+                    <button type="button" onClick={() => setForm({...form, avatar: ''})} className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-medium border border-gray-200 hover:bg-gray-100 ml-2 active:scale-95 transition-all">Clear</button>
                   </div>
                   <input 
                       type="file" 
@@ -2518,12 +2720,12 @@ const TestimonialsAdmin = ({ showToast }) => {
                           const file = e.target.files[0];
                           if (file) {
                                // 2MB limit
-                              compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, avatar:base64})) }).catch(err => console.error('Compression failed', err));
+                              const tempUrl = URL.createObjectURL(file); setForm(prev => ({...prev, avatar:tempUrl})); setLoading(true); showToast('Compressing image...', 'info'); compressAndConvertToBase64(file).then(base64 => { setForm(prev => ({...prev, avatar:base64})); setLoading(false); showToast('Image ready', 'success'); }).catch(err => { console.error('Compression failed', err); setLoading(false); showToast('Image compression failed', 'error'); });
                           }
                       }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm font-medium text-gray-800"
                   />
-                  {form.avatar && <img src={form.avatar} alt="Preview" className="h-16 w-16 object-cover rounded-full mt-2 border border-gray-200" />}
+                  {form.avatar && <img src={form.avatar} alt="Preview" className={cn("transition-all duration-700 ease-in-out", loading && "grayscale blur-sm opacity-50", "h-16 w-16 object-cover rounded-full mt-2 border border-gray-200")} />}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -2539,7 +2741,7 @@ const TestimonialsAdmin = ({ showToast }) => {
               </form>
           </FormModal>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((t)=>(
             <motion.div 
@@ -2725,7 +2927,7 @@ const CausesAdmin = ({ showToast }) => {
         </form>
       </FormModal>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredItems.map((c)=>(
             <motion.div 
@@ -2762,7 +2964,7 @@ const SiteContentManager = ({ showToast }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-gray-200 pb-2">
+      <div className="sticky top-[80px] md:top-[90px] z-20 bg-gray-50/90 backdrop-blur-md flex gap-4 border-b border-gray-200 py-2 -my-2 mb-4">
         <button 
           onClick={() => setActiveTab('hero')} 
           className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'hero' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
@@ -2776,7 +2978,13 @@ const SiteContentManager = ({ showToast }) => {
           Testimonials
         </button>
         <button 
-          onClick={() => setActiveTab('causes')} 
+            onClick={() => setActiveTab('media')} 
+            className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'media' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
+          >
+            Media Posts
+          </button>
+          <button 
+            onClick={() => setActiveTab('causes')} 
           className={`pb-2 px-4 text-sm font-bold transition-all ${activeTab === 'causes' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-800'}`}
         >
           Donation Causes
@@ -2786,6 +2994,7 @@ const SiteContentManager = ({ showToast }) => {
       {activeTab === 'hero' && <CarouselManager showToast={showToast} />}
       {activeTab === 'testimonials' && <TestimonialsAdmin showToast={showToast} />}
       {activeTab === 'causes' && <CausesAdmin showToast={showToast} />}
+        {activeTab === 'media' && <MediaPostsManager showToast={showToast} />}
     </div>
   );
 };

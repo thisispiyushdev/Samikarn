@@ -68,7 +68,7 @@ const Projects = () => {
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i*0.1 }} key={project.id} className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100 group">
                        <div className="h-48 bg-gray-100 relative overflow-hidden">
                           {project.image ? (
-                             <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                             <img loading="lazy" src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                           ) : <div className="w-full h-full flex items-center justify-center text-gray-300"><FolderHeart size={40} /></div>}
                           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase text-gray-900 tracking-widest">{project.status}</div>
                        </div>
@@ -98,7 +98,7 @@ const Projects = () => {
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i*0.1 }} key={report.id} className="p-8 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all group flex flex-col md:flex-row gap-6">
                        {report.media && (
                           <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden flex-shrink-0">
-                             <img src={report.media} alt={report.title} className="w-full h-full object-cover" />
+                             <img loading="lazy" src={report.media} alt={report.title} className="w-full h-full object-cover" />
                           </div>
                        )}
                        <div>
@@ -127,7 +127,7 @@ const Projects = () => {
                        <p className="text-gray-600 font-bold mb-4">{ann.description}</p>
                        {ann.media && (
                           <div className="w-full h-40 rounded-xl overflow-hidden mt-6">
-                             <img src={ann.media} alt="Cover" className="w-full h-full object-cover" />
+                             <img loading="lazy" src={ann.media} alt="Cover" className="w-full h-full object-cover" />
                           </div>
                        )}
                     </motion.div>

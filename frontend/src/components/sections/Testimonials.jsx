@@ -62,8 +62,7 @@ const Testimonials = () => {
     <section className="py-10 md:py-24 bg-gray-50 overflow-hidden relative">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-3xl z-0 pointer-events-none" />
       <div className="container mx-auto px-4 relative z-10 text-center mb-16">
-        <h2 className="text-primary font-black uppercase tracking-[0.2em] text-xs mb-4">Loved by our community</h2>
-        <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">See why they trust us</h3>
+        <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Voices of Impact</h3>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Read the stories of transformation and growth from the individuals we have worked with.
         </p>

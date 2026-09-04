@@ -19,7 +19,7 @@ const HeroSection = () => {
         const res = await cachedFetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/media`);
         const data = await res.json();
         if (data.success && data.media.length > 0) {
-          setHeroImages([hardcodedImage, ...data.media.map(m => m.mainImage || m.url)]);
+          setHeroImages([hardcodedImage, ...data.media.filter(m => m.type === 'image').map(m => m.mainImage || m.url)]);
         }
       } catch (err) {
         console.error("Failed to fetch carousel images:", err);
@@ -90,7 +90,7 @@ const HeroSection = () => {
 
         {/* Subtext */}
         <p className="hero-element text-xl md:text-2xl text-white/90 mb-12 max-w-3xl leading-relaxed font-medium">
-          Building an able society where every individual leads a life of purpose
+          Empowering every individual to live with purpose, dignity, and opportunity
         </p>
         
         {/* Pill Buttons */}

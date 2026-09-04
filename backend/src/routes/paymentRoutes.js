@@ -5,10 +5,10 @@ import { requireAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Rate limiting for payment endpoints (e.g., max 5 requests per 15 minutes)
+// Rate limiting for payment endpoints (allow more attempts during development and testing)
 const paymentLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 payment requests per windowMs
+  max: process.env.NODE_ENV === 'production' ? 30 : 200, // Limit each IP to 30 in prod, 200 in dev
   message: { success: false, message: 'Too many payment requests from this IP, please try again after 15 minutes.' },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
