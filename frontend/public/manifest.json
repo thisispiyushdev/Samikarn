@@ -1,0 +1,15 @@
+{
+  "short_name": "Samikaran",
+  "name": "Samikaran - Social Initiative & NGO",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#556b2f",
+  "display": "standalone"
+}

@@ -12,6 +12,11 @@ export default function SEO({ title, description, path = '', image }) {
       <meta name="description" content={description} />
       <link rel="canonical" href={canonicalUrl} />
       
+      {/* Favicon */}
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="apple-touch-icon" href="/favicon.svg" />
+      
       {/* Open Graph / Facebook / WhatsApp */}
       <meta property="og:site_name" content="Samikaran NGO" />
       <meta property="og:type" content="website" />
