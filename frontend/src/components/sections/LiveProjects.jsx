@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom';
 
 const LiveProjects = ({ liveProjects }) => {
   return (
-    <section className="py-10 md:py-24 bg-gray-50">
+    <section className="py-10 md:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
              <div className="text-center mb-16">
-                <h2 className="text-xl font-bold tracking-wide text-secondary uppercase mb-2">Our Work</h2>
-                <h3 className="text-4xl font-bold text-gray-900">Publication & Projects</h3>
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">Our Work</h1>
              </div>
              
              <div className="grid md:grid-cols-2 gap-8">

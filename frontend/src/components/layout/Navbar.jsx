@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Menu, X, Heart } from 'lucide-react';
+import { Menu, X, Heart, Share2 } from 'lucide-react';
 import { toggleMobileMenu, closeMobileMenu } from '../../store/slices/uiSlice';
+import ShareCardModal from '../common/ShareCardModal';
 
 import logo from '../../assets/media/logo.webp';
 
@@ -12,6 +13,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { isMobileMenuOpen } = useSelector((state) => state.ui);
   const location = useLocation();
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -52,6 +54,14 @@ const Navbar = () => {
                     <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full ${isActive(link.path) ? 'w-full' : ''}`}></span>
                 </Link>
             ))}
+            <button 
+                onClick={() => setIsShareOpen(true)}
+                className="flex items-center gap-1.5 text-gray-600 hover:text-primary px-3 py-2 rounded-full hover:bg-gray-50 transition-colors text-sm font-medium"
+                title="Share Samikaran Card"
+            >
+                <Share2 size={16} />
+                <span>Share</span>
+            </button>
             <Link 
                 to="/donate" 
                 className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -77,7 +87,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-lg p-4 flex flex-col gap-4"
+            className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-lg p-4 flex flex-col gap-3"
         >
              {navLinks.map((link) => (
                 <Link 
@@ -91,6 +101,13 @@ const Navbar = () => {
                     {link.name}
                 </Link>
             ))}
+             <button
+                onClick={() => { dispatch(closeMobileMenu()); setIsShareOpen(true); }}
+                className="flex items-center justify-center gap-2 bg-gray-100 text-gray-800 py-2.5 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+             >
+                <Share2 size={18} className="text-primary" />
+                <span>Share Website</span>
+             </button>
              <Link 
                 to="/donate" 
                 className="flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg font-medium shadow-md hover:bg-primary/90 transition-colors"
@@ -101,6 +118,9 @@ const Navbar = () => {
             </Link>
         </motion.div>
       )}
+
+      {/* Social Share Card Modal */}
+      <ShareCardModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
     </motion.nav>
   );
 };

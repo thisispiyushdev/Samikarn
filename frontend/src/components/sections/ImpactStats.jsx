@@ -62,7 +62,7 @@ const AnimatedCounter = ({ text, className }) => {
 
 const ImpactStats = ({ stats }) => {
   return (
-    <section className="py-12 md:py-32 bg-[#FAF9F6] relative overflow-hidden">
+    <section className="py-12 md:py-20 bg-[#FAF9F6] relative overflow-hidden">
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         
         {/* Header */}
@@ -73,7 +73,7 @@ const ImpactStats = ({ stats }) => {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-gray-900 uppercase tracking-tight"
           >
-            OUR <span className="text-[#5C6B38]">IMPACT</span> IN ACTION
+            OUR <span className="text-[#5C6B38]">IMPACT</span>
           </motion.h2>
         </div>
 

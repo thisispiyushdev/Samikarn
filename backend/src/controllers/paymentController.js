@@ -31,8 +31,13 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
+    const numericAmount = Number(amount);
+    if (isNaN(numericAmount) || numericAmount < 1) {
+      return res.status(400).json({ success: false, message: 'Invalid donation amount' });
+    }
+
     const options = {
-      amount: amount * 100, // Amount in paise
+      amount: Math.round(numericAmount * 100), // Amount in paise
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
     };
@@ -46,13 +51,13 @@ export const createOrder = async (req, res) => {
       name,
       email,
       contact,
-      amount,
+      amount: numericAmount,
       pan_number
     }]);
 
     if (dbError) {
       console.error('Database Error:', dbError);
-      return res.status(500).json({ success: false, message: 'Database Error. Please ensure donations table exists.' });
+      return res.status(500).json({ success: false, message: `Database Error: ${dbError.message || 'Failed to save donation'}` });
     }
 
     res.status(200).json({
@@ -61,7 +66,7 @@ export const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating order:', error);
-    res.status(500).json({ success: false, message: 'Something went wrong', error: error.message });
+    res.status(500).json({ success: false, message: error.message || 'Something went wrong', error: error.message });
   }
 };
 

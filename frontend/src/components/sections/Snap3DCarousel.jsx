@@ -119,9 +119,6 @@ const Snap3DCarousel = ({ items = [], onImageClick, isPaused = false }) => {
       
       {/* Static Section Header */}
       <div className="text-center px-4 z-10 mb-8">
-        <div className="text-yellow-400 font-bold uppercase tracking-[0.3em] text-sm mb-3 block">
-          Our Playbook
-        </div>
         <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight">
           Moments That Define Us
         </h2>
@@ -227,7 +224,7 @@ const Snap3DCarousel = ({ items = [], onImageClick, isPaused = false }) => {
             </div>
           )}
           <div className="text-white/80 font-bold uppercase tracking-[0.1em] text-xs max-w-lg mx-auto line-clamp-2">
-            {activeItem?.description || 'Explore our moments.'}
+            {activeItem?.title }
           </div>
         </motion.div>
       </div>

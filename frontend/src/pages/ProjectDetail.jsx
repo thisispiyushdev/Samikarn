@@ -111,7 +111,7 @@ const ProjectDetail = () => {
                     className="relative w-full aspect-[21/9] md:aspect-video rounded-[2rem] overflow-hidden shadow-2xl bg-gray-900 cursor-pointer group"
                     onClick={() => openLightbox(0)}
                 >
-                    <img 
+                    <img loading="lazy" 
                         src={getImgStatic(project)} 
                         alt={project.title} 
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
@@ -196,7 +196,7 @@ const ProjectDetail = () => {
                                     className="break-inside-avoid group cursor-pointer relative rounded-2xl overflow-hidden bg-gray-100"
                                     onClick={() => openLightbox(i + 1)}
                                 >
-                                    <img 
+                                    <img loading="lazy" 
                                         src={img} 
                                         alt={`${project.title} - Image ${i + 1}`}
                                         className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
@@ -293,7 +293,7 @@ const ProjectDetail = () => {
                                                 : 'border-transparent opacity-50 hover:opacity-80'
                                         }`}
                                     >
-                                        <img src={img} alt="" className="w-full h-full object-cover" />
+                                        <img loading="lazy" src={img} alt="" className="w-full h-full object-cover" />
                                     </button>
                                 ))}
                             </div>
