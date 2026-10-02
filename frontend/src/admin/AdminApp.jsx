@@ -827,42 +827,48 @@ const Dashboard = ({ showToast }) => {
   const [impact, setImpact] = useState({ studentsReached: '0', target: 85 });
   const token = localStorage.getItem('admin_token') || '';
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const [p, m, a, s, settings] = await Promise.all([
-          fetch(`${apiBase}/api/projects`).then(r=>r.json()),
-          fetch(`${apiBase}/api/media`).then(r=>r.json()),
-          fetch(`${apiBase}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
-          fetch(`${apiBase}/api/subscribers`, { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
-          fetch(`${apiBase}/api/settings`).then(r=>r.json()),
-        ]);
+  const fetchDashboardData = async () => {
+    try {
+      const [p, m, a, s, settings] = await Promise.all([
+        fetch(`${apiBase}/api/projects`).then(r=>r.json()),
+        fetch(`${apiBase}/api/media`).then(r=>r.json()),
+        fetch(`${apiBase}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
+        fetch(`${apiBase}/api/subscribers`, { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
+        fetch(`${apiBase}/api/settings`).then(r=>r.json()),
+      ]);
 
-        setStats({
-          projects: p.success ? p.projects.length : 0,
-          media: m.success ? m.media.length : 0,
-          admins: a.success ? a.admins.length : 0,
-          subscribers: s.success ? s.subscribers.length : 0,
-        });
-
-        if (settings.success && settings.settings.impactStats) {
-          setImpact({
-            studentsReached: settings.settings.impactStats.studentsReached,
-            target: 85 // Static target for now
-          });
-        }
-
-        // Aggregate recent activity
-        const activities = [];
-        if (p.success) p.projects.slice(0, 3).forEach(item => activities.push({ type: 'PROJECT', name: item.title, time: item.createdAt, icon: FolderHeart, color: 'text-emerald-500' }));
-        if (m.success) m.media.slice(0, 3).forEach(item => activities.push({ type: 'MEDIA', name: item.title, time: item.createdAt, icon: Newspaper, color: 'text-blue-500' }));
-        if (s.success) s.subscribers.slice(0, 3).forEach(item => activities.push({ type: 'SUBSCRIBER', name: item.email, time: item.createdAt, icon: Mail, color: 'text-purple-500' }));
-        
-        setRecentActivity(activities.sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5));
-      } catch (err) {
-        showToast('Failed to load dashboard data', 'error');
+      if ((a && a.message === 'Invalid or expired token') || (s && s.message === 'Invalid or expired token')) {
+        showToast('Invalid or expired token', 'error');
+        return;
       }
-    };
+
+      setStats({
+        projects: p.success ? p.projects.length : 0,
+        media: m.success ? m.media.length : 0,
+        admins: a.success ? a.admins.length : 0,
+        subscribers: s.success ? s.subscribers.length : 0,
+      });
+
+      if (settings.success && settings.settings.impactStats) {
+        setImpact({
+          studentsReached: settings.settings.impactStats.studentsReached,
+          target: 85 // Static target for now
+        });
+      }
+
+      // Aggregate recent activity
+      const activities = [];
+      if (p.success) p.projects.slice(0, 3).forEach(item => activities.push({ type: 'PROJECT', name: item.title, time: item.createdAt, icon: FolderHeart, color: 'text-emerald-500' }));
+      if (m.success) m.media.slice(0, 3).forEach(item => activities.push({ type: 'MEDIA', name: item.title, time: item.createdAt, icon: Newspaper, color: 'text-blue-500' }));
+      if (s.success) s.subscribers.slice(0, 3).forEach(item => activities.push({ type: 'SUBSCRIBER', name: item.email, time: item.createdAt, icon: Mail, color: 'text-purple-500' }));
+      
+      setRecentActivity(activities.sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5));
+    } catch (err) {
+      showToast('Failed to load dashboard data', 'error');
+    }
+  };
+
+  useEffect(() => {
     fetchDashboardData();
   }, [token, showToast]);
 
@@ -886,8 +892,7 @@ const Dashboard = ({ showToast }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {metrics.map((m, i) => (
           <SpotlightCard key={i} delay={i * 0.1}>
-            <div className="flex items-center justify-between mb-4"><div><h2 className="text-2xl font-bold text-gray-900">Dashboard</h2><p className="text-gray-500 font-medium text-sm mt-1">Overview of your NGO</p></div><button onClick={() => { fetchDashboardData(); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all active:scale-95"><RefreshCcw size={16} /> Refresh</button></div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex items-center justify-between mb-4">
               <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", m.color)}>
                 <m.icon size={24} />
               </div>
@@ -2796,6 +2801,9 @@ const AdminApp = () => {
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
+    if (message === 'Invalid or expired token' || message === 'Authentication required') {
+      auth.logout();
+    }
   };
 
   if (!auth.token) {
