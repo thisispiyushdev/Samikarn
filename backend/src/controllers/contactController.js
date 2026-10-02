@@ -129,3 +129,19 @@ export const addTestContact = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error. Please try again later.' });
   }
 };
+
+// @desc    Test submission from browser using GET request
+// @route   GET /api/contact/test-submit
+// @access  Public
+export const testSubmitFromBrowser = async (req, res) => {
+  req.body = {
+    firstName: req.query.firstName || 'Browser',
+    lastName: req.query.lastName || 'Test',
+    email: req.query.email || 'test@browser.com',
+    phone: req.query.phone || '0000000000',
+    message: req.query.message || 'This is an automated test message from the browser URL.'
+  };
+  
+  // Call the actual submit function
+  return submitContactForm(req, res);
+};
